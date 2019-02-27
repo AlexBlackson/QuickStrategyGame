@@ -3,21 +3,24 @@ from flask import Flask, request, abort, url_for, redirect, session, render_temp
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///qsg.db'
-db = SQLAlchemy(app)
+app.config.update(dict(
+	DEBUG=True,
+	SECRET_KEY='development key',
+	USERNAME='owner',
+	PASSWORD='pass',
+	SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(app.root_path, 'salon.db')
+))
 
+
+@app.cli.command('initdb')
+def initdb_command():
+	"""Creates the database tables."""
+	db.drop_all()
+	db.create_all()
+	print('Initialized the database.')
 app.secret_key = "trashSecurity"
 
-class User(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
-	username = db.Column(db.String(80), unique=True)
-	password = db.Column(db.String(80), unique=False)
-
-	def __init__(self, username, password):
-		self.username = username
-		self.password = password
-
-@app.route("/createAccount/", methods=["GET", "POST"])
+@app.route("/accounts/<username>", methods=["GET", "POST"])
 def createAccount():
 	if request.method == "POST":
 		if isUsernameUnique(request.form["username"]):
