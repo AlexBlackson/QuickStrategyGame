@@ -1,29 +1,3 @@
-<<<<<<< HEAD
-{% extends "layout.html" %}
-{% block body %}
-    <h2>Login</h2>
-    {% if error %}<p class="error"><strong>Error:</strong> {{ error }}{% endif %}
-    <form action="{{ url_for('login') }}" method="post">
-        <dl>
-            <dt>Username:
-            <dd><input type="text" name="username">
-            <dt>Password:
-            <dd><input type="password" name="password">
-            <dd><input type="submit" value="Login">
-        </dl>
-    </form>
-    <h2>Register</h2>
-    <form action="{{ url_for('add_patron') }}" method="post">
-        <dl>
-            <dt>Username:
-            <dd><input type="text" name="patron-username">
-            <dt>Password:
-            <dd><input type="password" name="patron-password">
-            <dd><input type="submit" value="Register">
-        </dl>
-    </form>
-
-=======
 {% extends "base.html" %}
 
 {% block title %}Login Page - {{ super() }}{% endblock %}
@@ -39,5 +13,4 @@
 	</form>
 	<br/>
 	To register a new account click <a href= "{{ url_for("createAccount") }}" >here</a>
->>>>>>> cb5d1850737203dddd033670fe1ffd59cca5e4e7
 {% endblock %}

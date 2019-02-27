@@ -20,6 +20,10 @@ def initdb_command():
 	print('Initialized the database.')
 app.secret_key = "trashSecurity"
 
+@app.route('/')
+def default():
+	return redirect(url_for("login"))
+
 @app.route("/accounts/<username>", methods=["GET", "POST"])
 def createAccount():
 	if request.method == "POST":
@@ -31,3 +35,10 @@ def createAccount():
 			return redirect(url_for("profile", username=session["username"]))
 
 	return render_template("createAccount.html")
+
+
+def isUsernameUnique(name):
+	if User.query.filter_by(username=name).first():
+		return False
+	else:
+		return True
