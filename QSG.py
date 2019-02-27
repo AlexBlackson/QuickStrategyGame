@@ -17,6 +17,10 @@ class User(db.Model):
 		self.username = username
 		self.password = password
 
+@app.route('/')
+def default():
+	return redirect(url_for("login"))
+
 @app.route("/createAccount/", methods=["GET", "POST"])
 def createAccount():
 	if request.method == "POST":
@@ -28,3 +32,10 @@ def createAccount():
 			return redirect(url_for("profile", username=session["username"]))
 
 	return render_template("createAccount.html")
+
+
+def isUsernameUnique(name):
+	if User.query.filter_by(username=name).first():
+		return False
+	else:
+		return True
