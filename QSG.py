@@ -27,7 +27,6 @@ def initdb_command():
 	print('Initialized the database.')
 app.secret_key = "trashSecurity"
 
-<<<<<<< HEAD
 def isUsernameUnique(username):
 	users = User.query.order_by(User.user_id.desc()).all()
 	print(users)
@@ -36,27 +35,49 @@ def isUsernameUnique(username):
 		print("false")
 		return True
 	return False
-=======
-@app.route('/')
-def default():
-	return redirect(url_for("login"))
->>>>>>> 5a18d0b508eaacaeae66fba880b69ad62869f51c
 
-@app.route("/accounts/<username>", methods=["GET", "POST"])
-def accounts():
-	return 404
+@app.route("/users/<username>", methods=["GET", "POST"])
+def users(username):
+	if request.method == "GET":
+		print(session["username"])
+		if session["username"] != username:
+			abort(401)
+		else:
+			return render_template("profile.html", username=username)
 
-@app.route("/login/", methods=["GET", "POST"])
+
+@app.route("/register/", methods=["GET", "POST"])
 def register():
 	if request.method == "POST":
-		if isUsernameUnique(request.form["username"]):
+
+		if request.form["username"] != "" and isUsernameUnique(request.form["username"]):
+			print("Username is unique")
 			db.session.add(User(request.form["username"], request.form["password"]))
 			db.session.commit()
 			session["username"] = request.form["username"]
-			return redirect(url_for("profile", username=session["username"]))
-		return render_template('createAccount.html',unique=True)
-	return render_template("createAccount.html")
+			return redirect(url_for("users", username=session["username"]))
+		else:
+			print("Username is not unique")
+			return render_template('createAccount.html',unique=False)
+	return render_template("createAccount.html", unique=True)
 
+@app.route("/login/", methods=["GET", "POST"])
+def login():
+	if request.method == "POST":
+		user = User.query.filter_by(username=request.form["username"]).first()
+		if user is None:
+			return render_template("login.html", invalid=True)
+		elif user.password != request.form["password"]:
+			return render_template("login.html", invalid=True)
+		else:
+			session["username"] = request.form["username"]
+			return redirect(url_for("users", username=session["username"]))
+	return render_template("login.html", invalid=False)
+
+@app.route("/logout/", methods=["GET", "POST"])
+def logout():
+	session["username"] = ""
+	return render_template("login.html", invalid=False)
 
 def isUsernameUnique(name):
 	if User.query.filter_by(username=name).first():
