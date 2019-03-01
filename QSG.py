@@ -27,6 +27,7 @@ def initdb_command():
 	print('Initialized the database.')
 app.secret_key = "trashSecurity"
 
+<<<<<<< HEAD
 def isUsernameUnique(username):
 	users = User.query.order_by(User.user_id.desc()).all()
 	print(users)
@@ -35,6 +36,11 @@ def isUsernameUnique(username):
 		print("false")
 		return True
 	return False
+=======
+@app.route('/')
+def default():
+	return redirect(url_for("login"))
+>>>>>>> 5a18d0b508eaacaeae66fba880b69ad62869f51c
 
 @app.route("/accounts/<username>", methods=["GET", "POST"])
 def accounts():
@@ -50,3 +56,10 @@ def register():
 			return redirect(url_for("profile", username=session["username"]))
 		return render_template('createAccount.html',unique=True)
 	return render_template("createAccount.html")
+
+
+def isUsernameUnique(name):
+	if User.query.filter_by(username=name).first():
+		return False
+	else:
+		return True
