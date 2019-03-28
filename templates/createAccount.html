@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 
 {% block title %}Register New User - {{ super() }}{% endblock %}
-{% if not unique% }
-	<h1>Username is not unique!</h1>
-{% endif}
+
 {% block body %}
-	<form action="{{url_for('login')}}" method="post">
+	{% if unique == False%}
+		<h4>Username is not unique!</h4>
+	{% endif%}
+	<form action="{{url_for('register')}}" method="post">
 			New Username:  <input type="text" name="username" />
 			<br />
 			New Password:  <input type="text" name="password" />
