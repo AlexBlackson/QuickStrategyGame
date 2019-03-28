@@ -163,11 +163,12 @@ def gameboard_get_test(game_id):
     #     for j in i:
     #         print(j)
     # print("*---2---")
-    j = json.dumps(tile_matrix)
-    print(j)
     # print("*---3---")
     # print(json.loads(j))
 
+@app.route("/map/", methods=["GET"])
+def map():
+    return render_template("map.html")
 
 # Gameplay Endpoints
 
