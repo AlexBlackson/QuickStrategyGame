@@ -25,6 +25,7 @@ def initdb_command():
 	db.drop_all()
 	db.create_all()
 	print('Initialized the database.')
+
 app.secret_key = "trashSecurity"
 
 def isUsernameUnique(username):
@@ -79,8 +80,12 @@ def logout():
 	session["username"] = ""
 	return render_template("login.html", invalid=False)
 
+# @app.route("/firstTile/", methods=["POST"])
+# def firstTile():
+# 	db.session
+
 def isUsernameUnique(name):
 	if User.query.filter_by(username=name).first():
 		return False
-	else:
-		return True
+	else:True
+		return 

@@ -17,8 +17,8 @@ class User(db.Model):
 
 class Player(db.Model):
 	player_id = db.Column(db.Integer, primary_key=True)
-	user = relationship("User", backref='user', lazy=True, uselist=False)
-	resources = db.Column(db.Array(Float), unique=False)
+	user = db.relationship("User", backref='user', lazy=True, uselist=False)
+	resources = db.Column(db.String, unique=False)
 	money = db.Column(db.Float, unique=False)
 	tiles = db.relationship("Tile", backref="player", lazy=True)
 
@@ -63,7 +63,7 @@ class Tile(db.Model):
 class TerritoryType(db.Model):
 	territoryType_id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(80),nullable=False,unique=True)
-	multiplier = db.Column(db.Array(Float),unique=True)
+	multiplier = db.Column(db.String,unique=True)
 	tile = db.relationship("Tile", backref="territoryType", lazy=True, uselist=False)
 
 	def __init__(self, name, multiplier):
