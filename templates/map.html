@@ -6,15 +6,17 @@
         <script type = "text/javascript">
 
         var myGameBoard;
+        var old_hover;
         myvar = setTimeout(getGameBoard,2000); 
 
-        function hover(id) {
+        function hover(id, color) {
+            old_hover = document.getElementById(id).getAttribute('class');
             document.getElementById(id).setAttribute('class', 'hexagon8');
         }
 
         function end_hover(id, revert)
         {
-            document.getElementById(id).setAttribute('class', revert);
+            document.getElementById(id).setAttribute('class', old_hover);
         }
 
         function clicked(id)
@@ -30,9 +32,62 @@
             xhr.open('GET', '/1/gameboard');
             xhr.onload = function() {
                 if (xhr.status === 200) {
-                    alert('User\'s name is ' + xhr.responseText);
                     myGameBoard = JSON.parse(xhr.responseText);
+                    var i;
+                    var left = 2;
+                    var right = 7;
+                    var left_increase = true;
+                    for (i = 0; i < 5; i++)
+                    {
+                        for(j = left; j < right; j++)
+                        {
+                            if(myGameBoard[i][j].player_id == "1")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon1');
+                            }
+                            else if(myGameBoard[i][j].player_id == "2")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon2');
+                            }
+                        }
+                        if(left_increase)
+                        {
+                            left--;
+                        }
+                        else
+                        {
+                            right++;
+                        }
+                        left_increase = !left_increase;
+                    }
+                
+
+                left = 0;
+                right = 7
+                var left_decrease = true;
+                for (i = 5; i < 9; i++)
+                {
+                    for(j = left; j < right; j++)
+                    {
+                        if(myGameBoard[i][j].player_id == "1")
+                        {
+                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon1');                       }
+                        else if(myGameBoard[i][j].player_id == "2")
+                        {
+                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon2');
+                        }
+                    }
+                    if(left_decrease)
+                    {
+                        left++;
+                    }
+                    else
+                    {
+                        right--;
+                    }
+                        left_decrease= !left_decrease;
                 }
+            }
                 else {
                     alert('Request failed. Returned status of ' + xhr.responseText);
                 }
