@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>QSG</title>
+        <link rel="stylesheet" type="text/css" href="../static/hex.css">
+        <script type = "text/javascript">
+
+        var data = JSON.stringify({'tile_id': 1, 'gameboard_id': 1, 'row': 0, 'col': 0, 'territoryName': 'frogs', 'multiplier': '[0.25, 0.5, 0.75]', 'player_id': -1, 'unit_count': 0});
+        postGameBoard(data);
+
+        function postGameBoard(data)
+        {
+            setTimeout(getGameBoard, 2000)
+
+            var req = new XMLHttpRequest();
+            req.open('GET', '/1/gameboard');
+            req.onreadystatechange = function () {
+                if (req.readyState == 4 && req.status == 200) {
+                    console.log(req.responseText)
+                    getGameBoard();
+                }
+            }
+            req.open("POST", "/1/gameboard/tiles/1", true);
+            req.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+            req.send(data);
+        }
+
+        function getGameBoard()
+        {
+            setTimeout(getGameBoard, 2000)
+
+            var req = new XMLHttpRequest();
+            req.open('GET', '/1/gameboard');
+            req.onreadystatechange = function () {
+                if (req.readyState == 4 && req.status == 200) {
+                    console.log(req.responseText);
+                }
+            }
+            req.open("GET", "/1/gameboard/tiles/1", true);
+            req.send();
+        }
+
+        this.makeRequest = function(method, url, data, callback) {
+            var req = new XMLHttpRequest();
+
+            req.onreadystatechange = function () {
+                if (req.readyState == 4 && req.status == 200) {
+                    callback(req);
+                }
+            }
+
+            req.open(method, url, true);
+            if (data) {
+                req.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+                req.send(data);
+            } else {
+                req.send();
+            }
+        }
+
+
+        </script>
+
+
+
+    </body>
+</html>
