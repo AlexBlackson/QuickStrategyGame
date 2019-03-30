@@ -44,9 +44,42 @@
             }
             else{*/
                 curr_clicked = id;
-                document.getElementById(id).setAttribute('class', 'hexagon8')
+                postTileChange(id, '8')
+
                 
             //}
+        }
+
+        function postTileChange(tile_id, newOwner){
+            var httpRequest = new XMLHttpRequest();
+
+            if (!httpRequest) {
+                alert('Giving up :( Cannot create an XMLHTTP instance');
+                return false;
+            }
+
+            httpRequest.onreadystatechange = function() { handleTileChange(httpRequest, tile_id, newOwner) }
+
+            if (newOwner == '8'){
+                newOwner = '0';
+            }
+
+            httpRequest.open("POST", "/1/gameboard/tiles/" + tile_id);
+            httpRequest.setRequestHeader('Content-Type', 'application/json');
+
+            var reqMessage = JSON.stringify({"player_id" : newOwner, "territoryName" : "mountain", "multiplier" : "[1,2,3]", "unit_count": "5"})
+            httpRequest.send(reqMessage);
+        }
+
+        function handleTileChange(httpRequest, tile_id, newOwner){
+            if (httpRequest.readyState === XMLHttpRequest.DONE){
+                if (httpRequest.status === 200){
+                    document.getElementById(tile_id).setAttribute('class', 'hexagon' + newOwner)
+                }
+                else {
+                    alert("There was a problem with this request");
+                }
+            }
         }
 
         function getGameBoard()
