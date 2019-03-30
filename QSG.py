@@ -96,6 +96,10 @@ def logout():
     return render_template("login.html", invalid=False)
 
 
+# @app.route("/firstTile/", methods=["POST"])
+# def firstTile():
+# 	db.session
+
 def isUsernameUnique(name):
     if User.query.filter_by(username=name).first():
         return False
