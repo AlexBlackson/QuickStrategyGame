@@ -52,36 +52,48 @@ class Gameboard(db.Model):
     # def __init__(self, game):
     # 	self.game_id = game.game_id
 
+# player_id will = -1 when there is no player_id
+# {'tile_id': 1, 'gameboard_id': 1, 'row': 0, 'col': 0, 'territoryName': 'Grass', 'multiplier': '[0.25, 0.5, 0.75]', 'player_id': 2, 'unit_count': 0}
+
 
 class Tile(db.Model):
     tile_id = db.Column(db.Integer, primary_key=True)
-    row = db.Column(db.Integer, unique=False)
-    col = db.Column(db.Integer, unique=False)
     gameboard_id = db.Column(db.Integer, db.ForeignKey(
         'gameboard.gameboard_id'), nullable=False)
+    row = db.Column(db.Integer, unique=False)
+    col = db.Column(db.Integer, unique=False)
+    # mutable
+    territoryName = db.Column(db.String(80), nullable=False, unique=False)
+    multiplier = db.Column(db.String(80), unique=False)
     player_id = db.Column(db.Integer, db.ForeignKey(
         'player.player_id'), nullable=True)
-    territoryType = db.relationship(
-        'TerritoryType', backref='tile', uselist=False, lazy=False)
+    unit_count = db.Column(db.Integer, unique=False)
+    # territoryType = db.relationship(
+    #     'TerritoryType', backref='tile', uselist=False, lazy=False)
 
-    def __init__(self, territoryType, player, gameboard, row, col):
-        self.territoryType = territoryType
+    def __init__(self, player, gameboard, row, col, territoryName, multiplier, unit_count):
+        self.territoryName = territoryName
+        self.multiplier = multiplier
         if player != None:
             self.player_id = player.player_id
+        else:
+            self.player_id = -1
         self.gameboard_id = gameboard.gameboard_id
         self.row = row
         self.col = col
+        self.unit_count = unit_count
 
     def as_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        dict = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        return dict
 
 
-class TerritoryType(db.Model):
-    territoryType_id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=False, unique=True)
-    multiplier = db.Column(db.String, unique=True)
-    tile_id = db.Column(db.Integer, db.ForeignKey('tile.tile_id'))
-
-    def __init__(self, name, multiplier):
-        self.name = name
-        self.multiplier = multiplier
+# class TerritoryType(db.Model):
+#     territoryType_id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String(80), nullable=False, unique=True)
+#     multiplier = db.Column(db.String, unique=True)
+#     tile_id = db.Column(db.Integer, db.ForeignKey('tile.tile_id'))
+#
+#     def __init__(self, name, multiplier):
+#         self.name = name
+#         self.multiplier = multiplier

@@ -2,9 +2,10 @@ import os
 import datetime
 import json
 import random
+import math
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
 # export FLASK_APP=salon.py
-from models import db, User, Player, Game, Gameboard, Tile, TerritoryType
+from models import db, User, Player, Game, Gameboard, Tile
 
 # create our yuge application
 app = Flask(__name__)
@@ -16,8 +17,8 @@ app.config.update(dict(
     USERNAME='owner',
     PASSWORD='pass',
     SQLALCHEMY_TRACK_MODIFICATIONS=False,
-    SQLALCHEMY_DATABASE_URI='sqlite:///'
-    + os.path.join(app.root_path, 'salon.db')
+    SQLALCHEMY_DATABASE_URI='sqlite:///' +
+    os.path.join(app.root_path, 'salon.db')
 ))
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
@@ -33,7 +34,8 @@ def initdb_command():
     createUsers()
     createGame()
     createGameBoard()
-    gameboard_get_test(Game.query.first().game_id)
+    # game = Game.query.first()
+    # gameboard_get_test(game.game_id)
 
 
 app.secret_key = "trashSecurity"
@@ -96,9 +98,10 @@ def logout():
     return render_template("login.html", invalid=False)
 
 
-# @app.route("/firstTile/", methods=["POST"])
-# def firstTile():
-# 	db.session
+@app.route("/map/", methods=["GET"])
+def map():
+    return render_template("map.html")
+
 
 def isUsernameUnique(name):
     if User.query.filter_by(username=name).first():
@@ -136,18 +139,19 @@ def createGameBoard():
     gameboard = g.gameboard
     board = []
 
-    # create and arbitrary territoryType as a placeholder
-    ttype = TerritoryType("Grass", 1)
-    db.session.add(ttype)
-    db.session.commit()
     players = Player.query.all()
     players.append(None)
     # Create all the necessary tiles and put the in the gameboard
     for i in range(0, 9):
         arr = []
         for j in range(0, 9):
-            arr.append(Tile(ttype, players[random.randint(0,2)], gameboard, i, j))
+            t = Tile(players[random.randint(0, 2)], gameboard,
+                     i, j, 'Grass', json.dumps([.25, .5, .75]), 0)
+            db.session.add(t)
+            arr.append(t)
         board.append(arr)
+
+    db.session.add(g)
     db.session.commit()
     # Prove the creation worked
     # tiles = Game.query.first().gameboard.tiles
@@ -162,17 +166,28 @@ def gameboard_get_test(game_id):
     tile_matrix = [[0 for x in range(0, 9)] for y in range(0, 9)]
     for t in tiles:
         tile_matrix[t.row][t.col] = t.as_dict()
-    #
+    tile_post_test(
+        game.game_id, game.gameboard.tiles[0].tile_id, json.dumps(tile_matrix[0][0]))
     # for i in tile_matrix:
+    #     print(i)
+    #     print("*")
     #     for j in i:
     #         print(j)
+    #     print("")
+    # print(tile_matrix)
     # print("*---2---")
     # print("*---3---")
     # print(json.loads(j))
 
-@app.route("/map/", methods=["GET"])
-def map():
-    return render_template("map.html")
+
+def tile_post_test(game_id, tile_id, tile):
+    tile = json.loads(tile)
+    print(tile)
+    db_tile = Tile.query.filter_by(tile_id=tile_id).first()
+    db_tile.territoryName = tile['territoryName']
+    db_tile.multiplier = tile['multiplier']
+    db_tile.player_id = tile['player_id']
+    db_tile.unit_count = tile['unit_count']
 
 # Gameplay Endpoints
 
@@ -180,6 +195,8 @@ def map():
 # this is in the form of a 2d array of tiles
 # Note: Tiles have a TerritoryType object as well
 # Note: Can use curl to access this endpoint if no frontend
+
+
 @app.route("/<game_id>/gameboard", methods=["GET"])
 def gameboard(game_id):
     if request.method == "GET":
@@ -191,3 +208,25 @@ def gameboard(game_id):
         for t in tiles:
             tile_matrix[t.row][t.col] = t.as_dict()
         return json.dumps(tile_matrix), 200
+
+
+@app.route("/<game_id>/gameboard/tiles/<tile_id>", methods=["GET", "POST"])
+def tile(game_id, tile_id):
+    if request.method == "POST":
+        tile = request.get_json()
+        db_tile = Tile.query.filter_by(tile_id=tile_id).first()
+        db_tile.territoryName = tile['territoryName']
+        db_tile.multiplier = tile['multiplier']
+        db_tile.player_id = tile['player_id']
+        db_tile.unit_count = tile['unit_count']
+        print(Tile.query.filter_by(tile_id=tile_id).first().territoryName)
+        db.session.commit()
+        return json.dumps(Tile.query.filter_by(tile_id=tile_id).first().as_dict()), 201
+    elif request.method == "GET":
+        # print(Tile.query.filter_by(tile_id=tile_id).first().as_dict())
+        return json.dumps(Tile.query.filter_by(tile_id=tile_id).first().as_dict()), 200
+
+
+@app.route("/testing/", methods=["GET", "POST"])
+def testing():
+    return render_template("posttest.html")
