@@ -219,7 +219,8 @@ def tile(game_id, tile_id):
         db_tile.multiplier = tile['multiplier']
         db_tile.player_id = tile['player_id']
         db_tile.unit_count = tile['unit_count']
-        # print(Tile.query.filter_by(tile_id=tile_id).first().territoryName)
+        print(Tile.query.filter_by(tile_id=tile_id).first().territoryName)
+        db.session.commit()
         return json.dumps(Tile.query.filter_by(tile_id=tile_id).first().as_dict()), 201
     elif request.method == "GET":
         # print(Tile.query.filter_by(tile_id=tile_id).first().as_dict())
