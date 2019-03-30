@@ -7,6 +7,10 @@
 
         var myGameBoard;
         var old_hover;
+        var curr_clicked;
+        var game_state;
+        // 0 - none clicked, 1 - your territory selected, 2 - opponent territory selected 
+        var old_class
         myvar = setTimeout(getGameBoard,2000); 
 
         function hover(id, color) {
@@ -21,7 +25,27 @@
 
         function clicked(id)
         {
-
+            /*
+            console.log(curr_clicked)
+            if (curr_clicked == document.getElementById(id).getAttribute('class')){
+                var rc = parseInt(id)
+                console.log(rc)
+                console.log(myGameBoard[0])
+                console.log(typeof rc)
+                console.log(myGameBoard[rc / 10][rc % 10])
+                console.log(myGameBoard[rc / 10][rc % 10].player_id)
+                var owner = myGameBoard[rc / 10][rc % 10].player_id
+                if (owner == '0'){
+                    owner = 7
+                }
+                old_classlass = 'hexagon' + owner
+                document.getElementById(id).setAttribute('class', old_class)
+            }
+            else{*/
+                curr_clicked = id;
+                document.getElementById(id).setAttribute('class', 'hexagon8')
+                
+            //}
         }
 
         function getGameBoard()
@@ -49,6 +73,22 @@
                             {
                                 document.getElementById(i + "" + j).setAttribute('class', 'hexagon2');
                             }
+                            else if(myGameBoard[i][j].player_id == "3")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon3');
+                            }
+                            else if(myGameBoard[i][j].player_id == "4")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon4');
+                            }
+                            else if(myGameBoard[i][j].player_id == "5")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon5');
+                            }
+                            else if(myGameBoard[i][j].player_id == "6")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon6');
+                            }
                         }
                         if(left_increase)
                         {
@@ -70,12 +110,29 @@
                     for(j = left; j < right; j++)
                     {
                         if(myGameBoard[i][j].player_id == "1")
-                        {
-                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon1');                       }
-                        else if(myGameBoard[i][j].player_id == "2")
-                        {
-                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon2');
-                        }
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon1');
+                            }
+                            else if(myGameBoard[i][j].player_id == "2")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon2');
+                            }
+                            else if(myGameBoard[i][j].player_id == "3")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon3');
+                            }
+                            else if(myGameBoard[i][j].player_id == "4")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon4');
+                            }
+                            else if(myGameBoard[i][j].player_id == "5")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon5');
+                            }
+                            else if(myGameBoard[i][j].player_id == "6")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon6');
+                            }
                     }
                     if(left_decrease)
                     {

@@ -198,7 +198,7 @@
     position: relative;
     width: 100px; 
     height: 57.74px;
-    background-color: #66ccff;
+    background-color: #f265da;
     margin: 28.87px 0;
   }
   
@@ -213,11 +213,39 @@
   
   .hexagon8:before {
     bottom: 100%;
-    border-bottom: 28.87px solid #66ccff;
+    border-bottom: 28.87px solid #f265da;
   }
   
   .hexagon8:after {
     top: 100%;
     width: 0;
-    border-top: 28.87px solid #66ccff;
+    border-top: 28.87px solid #f265da;
+  }
+
+  .hexagon9 {
+    position: relative;
+    width: 100px; 
+    height: 57.74px;
+    background-color: #7fdcef;
+    margin: 28.87px 0;
+  }
+
+  .hexagon9:before,
+  .hexagon9:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+  }
+  
+  .hexagon9:before {
+    bottom: 100%;
+    border-bottom: 28.87px solid #7fdcef;
+  }
+  
+  .hexagon9:after {
+    top: 100%;
+    width: 0;
+    border-top: 28.87px solid #7fdcef;
   }
