@@ -4,12 +4,11 @@ import json
 import random
 import math
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
-# export FLASK_APP=salon.py
-from models import db, User, Player, Game, Gameboard, Tile
+from flask_restless import APIManager
+from Models import *
 
 # create our yuge application
 app = Flask(__name__)
-
 # Load default config and override config from an environment variable
 app.config.update(dict(
     DEBUG=True,
@@ -18,11 +17,27 @@ app.config.update(dict(
     PASSWORD='pass',
     SQLALCHEMY_TRACK_MODIFICATIONS=False,
     SQLALCHEMY_DATABASE_URI='sqlite:///' +
-    os.path.join(app.root_path, 'salon.db')
+    os.path.join(app.root_path, 'game.db')
 ))
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
-
+app.secret_key = "trashSecurity"
+# ma = Marshmallow(app)
 db.init_app(app)
+app.app_context().push()
+apimanager = APIManager(app, flask_sqlalchemy_db=db)
+
+
+apimanager.create_api(User, methods=['GET', 'POST', 'PUT', 'DELETE'])
+apimanager.create_api(Player, methods=['GET', 'POST', 'PUT', 'DELETE'])
+apimanager.create_api(Game, methods=['GET', 'POST', 'PUT' 'DELETE'])
+apimanager.create_api(Tile, methods=['GET', 'POST', 'PUT' 'DELETE'])
+apimanager.create_api(Turn, methods=['GET', 'POST', 'PUT' 'DELETE'])
+
+
+@app.route("/routes")
+def routes():
+    list_routes()
+    return render_template('login.html')
 
 
 @app.cli.command('initdb')
@@ -32,21 +47,14 @@ def initdb_command():
     db.create_all()
     print('Initialized the database.')
     createUsers()
-    createGame()
+    createGame(User.query.all())
     createGameBoard()
-    # game = Game.query.first()
-    # gameboard_get_test(game.game_id)
-
-
-app.secret_key = "trashSecurity"
+    usrs = User.query.all()
 
 
 def isUsernameUnique(username):
     users = User.query.order_by(User.user_id.desc()).all()
-    print(users)
-    print(username)
     if username in users:
-        print("false")
         return True
     return False
 
@@ -54,7 +62,6 @@ def isUsernameUnique(username):
 @app.route("/users/<username>", methods=["GET", "POST"])
 def users(username):
     if request.method == "GET":
-        print(session["username"])
         if session["username"] != username:
             abort(401)
         else:
@@ -66,14 +73,12 @@ def register():
     if request.method == "POST":
 
         if request.form["username"] != "" and isUsernameUnique(request.form["username"]):
-            print("Username is unique")
             db.session.add(
                 User(request.form["username"], request.form["password"]))
             db.session.commit()
             session["username"] = request.form["username"]
             return redirect(url_for("users", username=session["username"]))
         else:
-            print("Username is not unique")
             return render_template('createAccount.html', unique=False)
     return render_template("createAccount.html", unique=True)
 
@@ -113,6 +118,7 @@ def isUsernameUnique(name):
 def createUsers():
     db.session.add(User('p1', 'p'))
     db.session.add(User('p2', 'p'))
+    db.session.add(User('p3', 'p'))
     db.session.commit()
 
 # creates a player, updates db, and assigns to game
@@ -125,10 +131,14 @@ def createPlayer(user, game):
     game.players.append(p)
 
 
-def createGame():
-    g = Game(Gameboard())
-    createPlayer(User.query.filter_by(username='p1').first(), g)
-    createPlayer(User.query.filter_by(username='p2').first(), g)
+def createGame(players):
+    turn = Turn()
+    db.session.add(turn)
+    g = Game(turn, Gameboard())
+    for p in players:
+        createPlayer(p, g)
+    order = [p.player_id for p in g.players]
+    turn.order = json.dumps(order)
     db.session.add(g)
     db.session.commit()
 
@@ -189,7 +199,14 @@ def tile_post_test(game_id, tile_id, tile):
     db_tile.player_id = tile['player_id']
     db_tile.unit_count = tile['unit_count']
 
-# Gameplay Endpoints
+
+def turn_test():
+    turn = Turn(Player.query.first(), 0)
+    db.session.add(turn)
+    db.session.commit()
+    test_turn = Game.query.first().turn
+
+# ------Gameplay Endpoints------
 
 # Will return a JSON formated string of the representation of the gameboard
 # this is in the form of a 2d array of tiles
@@ -226,7 +243,48 @@ def tile(game_id, tile_id):
         # print(Tile.query.filter_by(tile_id=tile_id).first().as_dict())
         return json.dumps(Tile.query.filter_by(tile_id=tile_id).first().as_dict()), 200
 
+# @app.route("/<game_id>/turn", methods=["GET","POST"])
+# def turn(game_id):
+#     print("*")
+#     print(Turn.query.all()[0].turn_id)
+#     print(type(int(game_id)))
+#     g = Game.query.filter_by(game_id=game_id).first()
+#     print(g.turn_id)
+#     turn = Turn.query.filter_by(turn_id=g.turn_id).first()
+#     order = json.loads(turn.order)
+#     if request.method == "POST":
+#         if round == 0:
+#             next_idx = (g.turn.idx+1)%len(turn)
+#             turn.idx = next_idx
+#             if next_idx == 0:
+#                 turn.round += 1
+#         db.session.commit()
+#         return turn.as_dict(), 201
+#     elif request.method == "GET":
+#         return json.dumps(turn.as_dict()), 200
+#
+
 
 @app.route("/testing/", methods=["GET", "POST"])
 def testing():
     return render_template("posttest.html")
+
+
+def list_routes():
+    import urllib
+    with app.app_context():
+        output = []
+        for rule in app.url_map.iter_rules():
+
+            options = {}
+            for arg in rule.arguments:
+                options[arg] = "[{0}]".format(arg)
+
+            methods = ','.join(rule.methods)
+            url = url_for(rule.endpoint, **options)
+            line = urllib.parse.unquote(
+                "{:50s} {:20s} {}".format(rule.endpoint, methods, url))
+            output.append(line)
+
+        for line in sorted(output):
+            print(line)
