@@ -7,8 +7,11 @@
 
         var myGameBoard;
         var old_hover;
-        myvar = setTimeout(getGameBoard,2000);
-		
+        var curr_clicked;
+        var game_state;
+        // 0 - none clicked, 1 - your territory selected, 2 - opponent territory selected 
+        var old_class
+        myvar = setTimeout(getGameBoard,2000); 
 
         function hover(id, color) {
             old_hover = document.getElementById(id).getAttribute('class');
@@ -23,7 +26,60 @@
 
         function clicked(id)
         {
-			
+            /*
+            console.log(curr_clicked)
+            if (curr_clicked == document.getElementById(id).getAttribute('class')){
+                var rc = parseInt(id)
+                console.log(rc)
+                console.log(myGameBoard[0])
+                console.log(typeof rc)
+                console.log(myGameBoard[rc / 10][rc % 10])
+                console.log(myGameBoard[rc / 10][rc % 10].player_id)
+                var owner = myGameBoard[rc / 10][rc % 10].player_id
+                if (owner == '0'){
+                    owner = 7
+                }
+                old_classlass = 'hexagon' + owner
+                document.getElementById(id).setAttribute('class', old_class)
+            }
+            else{*/
+                curr_clicked = id;
+                postTileChange(id, '8')
+
+                
+            //}
+        }
+
+        function postTileChange(tile_id, newOwner){
+            var httpRequest = new XMLHttpRequest();
+
+            if (!httpRequest) {
+                alert('Giving up :( Cannot create an XMLHTTP instance');
+                return false;
+            }
+
+            httpRequest.onreadystatechange = function() { handleTileChange(httpRequest, tile_id, newOwner) }
+
+            if (newOwner == '8'){
+                newOwner = '0';
+            }
+
+            httpRequest.open("POST", "/1/gameboard/tiles/" + tile_id);
+            httpRequest.setRequestHeader('Content-Type', 'application/json');
+
+            var reqMessage = JSON.stringify({"player_id" : newOwner, "territoryName" : "mountain", "multiplier" : "[1,2,3]", "unit_count": "5"})
+            httpRequest.send(reqMessage);
+        }
+
+        function handleTileChange(httpRequest, tile_id, newOwner){
+            if (httpRequest.readyState === XMLHttpRequest.DONE){
+                if (httpRequest.status === 200){
+                    document.getElementById(tile_id).setAttribute('class', 'hexagon' + newOwner)
+                }
+                else {
+                    alert("There was a problem with this request");
+                }
+            }
         }
 
         function getGameBoard()
@@ -51,6 +107,22 @@
                             {
                                 document.getElementById(i + "" + j).setAttribute('class', 'hexagon2');
                             }
+                            else if(myGameBoard[i][j].player_id == "3")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon3');
+                            }
+                            else if(myGameBoard[i][j].player_id == "4")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon4');
+                            }
+                            else if(myGameBoard[i][j].player_id == "5")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon5');
+                            }
+                            else if(myGameBoard[i][j].player_id == "6")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon6');
+                            }
                         }
                         if(left_increase)
                         {
@@ -72,12 +144,29 @@
                     for(j = left; j < right; j++)
                     {
                         if(myGameBoard[i][j].player_id == "1")
-                        {
-                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon1');                       }
-                        else if(myGameBoard[i][j].player_id == "2")
-                        {
-                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon2');
-                        }
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon1');
+                            }
+                            else if(myGameBoard[i][j].player_id == "2")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon2');
+                            }
+                            else if(myGameBoard[i][j].player_id == "3")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon3');
+                            }
+                            else if(myGameBoard[i][j].player_id == "4")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon4');
+                            }
+                            else if(myGameBoard[i][j].player_id == "5")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon5');
+                            }
+                            else if(myGameBoard[i][j].player_id == "6")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon6');
+                            }
                     }
                     if(left_decrease)
                     {
