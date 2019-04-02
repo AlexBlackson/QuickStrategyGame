@@ -30,6 +30,7 @@ apimanager = APIManager(app, flask_sqlalchemy_db=db)
 apimanager.create_api(User, methods=['GET', 'POST', 'PUT', 'DELETE'])
 apimanager.create_api(Player, methods=['GET', 'POST', 'PUT', 'DELETE'])
 apimanager.create_api(Game, methods=['GET', 'POST', 'PUT' 'DELETE'])
+apimanager.create_api(Gameboard, methods=['GET', 'POST', 'PUT', 'DELETE'])
 apimanager.create_api(Tile, methods=['GET', 'POST', 'PUT' 'DELETE'])
 apimanager.create_api(Turn, methods=['GET', 'POST', 'PUT' 'DELETE'])
 
