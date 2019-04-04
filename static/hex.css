@@ -169,11 +169,11 @@
     width: 100px; 
     height: 57.74px;
     background-color: purple;
-	background-image: url("https://cdn0.iconfinder.com/data/icons/the-middle-ages/500/Knight_knight_helmet-512.png");
+	  background-image: url("https://cdn0.iconfinder.com/data/icons/the-middle-ages/500/Knight_knight_helmet-512.png");
     background-size: 25px;
-	background-position: center;
-	background-repeat: no-repeat;
-	text-align: left;
+	  background-position: center;
+	  background-repeat: no-repeat;
+	  text-align: left;
     margin: 28.87px 0;
   }
   
@@ -202,11 +202,6 @@
     width: 100px; 
     height: 57.74px;
     background-color: gray;
-	background-image: url("https://cdn0.iconfinder.com/data/icons/the-middle-ages/500/Knight_knight_helmet-512.png");
-    background-size: 25px;
-	background-position: center;
-	background-repeat: no-repeat;
-	text-align: left;
     margin: 28.87px 0;
   }
   
@@ -235,6 +230,10 @@
     width: 100px; 
     height: 57.74px;
     background-color: #66ccff;
+    background-image: url("https://cdn0.iconfinder.com/data/icons/the-middle-ages/500/Knight_knight_helmet-512.png");
+    background-size: 25px;
+	  background-position: center;
+	  background-repeat: no-repeat;
     margin: 28.87px 0;
   }
   

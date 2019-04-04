@@ -4,10 +4,12 @@
         <title>QSG</title>
         <link rel="stylesheet" type="text/css" href="../static/hex.css">
         <script type = "text/javascript">
-
         var myGameBoard;
         var old_hover;
         myvar = setTimeout(getGameBoard,2000);
+		var has_clicked = false;
+        var clicked_id;
+        
 		
 
         function hover(id, color) {
@@ -23,7 +25,59 @@
 
         function clicked(id)
         {
-			
+			if(!has_clicked)
+			{
+				clicked_id = id;
+				has_clicked = true;
+			}
+			else
+			{
+				var attacker_number = parseInt(document.getElementById(clicked_id).getElementsByTagName('p')[0].innerHTML);
+				var defender_number = parseInt(document.getElementById(id).getElementsByTagName('p')[0].innerHTML);
+				
+				if(attacker_number < defender_number)
+				{
+					defender_number -= attacker_number
+                    attacker_number = 1;
+                    myGameBoard[parseInt(id.charAt(0))][parseInt(id.charAt(1))].unit_count = defender_number;
+                    myGameBoard[parseInt(clicked_id.charAt(0))][parseInt(clicked_id.charAt(1))].unit_count = defender_number;
+				}
+				else if(attacker_number == defender_number)
+				{
+					attacker_number = 1;
+                    defender_number = 1;
+                    
+                    myGameBoard[parseInt(id.charAt(0))][parseInt(id.charAt(1))].unit_count = defender_number;
+                    myGameBoard[parseInt(clicked_id.charAt(0))][parseInt(clicked_id.charAt(1))].unit_count = defender_number;
+				}
+				else
+				{
+					attacker_number = attacker_number - defender_number-1;
+                    defender_number = 0;
+                    
+                    myGameBoard[parseInt(id.charAt(0))][parseInt(id.charAt(1))].unit_count = attacker_number;
+                    myGameBoard[parseInt(clicked_id.charAt(0))][parseInt(clicked_id.charAt(1))].unit_count = 1;
+
+                    myGameBoard[parseInt(id.charAt(0))][parseInt(id.charAt(1))].player_id = myGameBoard[parseInt(clicked_id.charAt(0))][parseInt(clicked_id.charAt(1))].player_id;
+				}
+				has_clicked = false;
+            
+            
+                var xhttp = new XMLHttpRequest();
+                xhttp.open('POST', '/1/gameboard/tiles/' + myGameBoard[parseInt(id.charAt(0))][parseInt(id.charAt(1))].tile_id);
+
+                xhttp.setRequestHeader('Content-Type', 'application/json');
+
+                xhttp.send(JSON.stringify(myGameBoard[parseInt(id.charAt(0))][parseInt(id.charAt(1))], null, 1));
+
+                var xhttp2 = new XMLHttpRequest();
+                xhttp2.open('POST', '/1/gameboard/tiles/' + myGameBoard[parseInt(clicked_id.charAt(0))][parseInt(clicked_id.charAt(1))].tile_id);
+
+                xhttp2.setRequestHeader('Content-Type', 'application/json');
+
+                xhttp2.send(JSON.stringify(myGameBoard[parseInt(clicked_id.charAt(0))][parseInt(clicked_id.charAt(1))]));
+            }
+
         }
 
         function getGameBoard()
@@ -46,18 +100,22 @@
                             if(myGameBoard[i][j].player_id == "1")
                             {
                                 document.getElementById(i + "" + j).setAttribute('class', 'hexagon1');
+                                document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
                             }
                             else if(myGameBoard[i][j].player_id == "2")
                             {
                                 document.getElementById(i + "" + j).setAttribute('class', 'hexagon2');
+                                document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
                             }
+
+                            
                         }
                         if(left_increase)
                         {
                             left--;
                         }
                         else
-                        {
+                        {[i]
                             right++;
                         }
                         left_increase = !left_increase;
@@ -73,11 +131,15 @@
                     {
                         if(myGameBoard[i][j].player_id == "1")
                         {
-                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon1');                       }
+                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon1');                     
+                            document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;  
+                        }
                         else if(myGameBoard[i][j].player_id == "2")
                         {
                             document.getElementById(i + "" + j).setAttribute('class', 'hexagon2');
+                            document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
                         }
+
                     }
                     if(left_decrease)
                     {
@@ -107,187 +169,187 @@
         <h1>Money: 0; Territories: 0</h1>
 
             <div style="position: absolute; top: 100px; left: 700px;" >
-            <div id = "02" onmouseout = "end_hover('02', 'hexagon7')" onmouseover = "hover('02')" onclick = "clicked('02')"  class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "02" onmouseout = "end_hover('02', 'hexagon7')" onmouseover = "hover('02')" onclick = "clicked('02')"  class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 
             <div style="position: absolute; top:90px; left: -54px;" >
-            <div id = "11" onclick = "clicked('11')" onmouseout = "end_hover('11', 'hexagon7')" onmouseover = "hover('11')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "11" onclick = "clicked('11')" onmouseout = "end_hover('11', 'hexagon7')" onmouseover = "hover('11')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 
             <div style="position: absolute; top:90px; left: -54px;" >
-            <div id = "21" onclick = "clicked('21')" onmouseout = "end_hover('21', 'hexagon7')" onmouseover = "hover('21')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "21" onclick = "clicked('21')" onmouseout = "end_hover('21', 'hexagon7')" onmouseover = "hover('21')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 
             <div style="position: absolute; top:90px; left: -54px;" >
-            <div id = "30" onclick = "clicked('30')" onmouseout = "end_hover('30', 'hexagon7')" onmouseover = "hover('30')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "30" onclick = "clicked('30')" onmouseout = "end_hover('30', 'hexagon7')" onmouseover = "hover('30')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 
             <div style="position: absolute; top:90px; left: -54px;" >
-            <div id = "40" onclick = "clicked('40')" onmouseout = "end_hover('40', 'hexagon7')" onmouseover = "hover('40')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "40" onclick = "clicked('40')" onmouseout = "end_hover('40', 'hexagon7')" onmouseover = "hover('40')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 
             <div style="position: absolute; top:90px; left:54px;">
-            <div id = "50" onclick = "clicked('50')" onmouseout = "end_hover('50', 'hexagon7')" onmouseover = "hover('50')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "50" onclick = "clicked('50')" onmouseout = "end_hover('50', 'hexagon7')" onmouseover = "hover('50')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 
             <div style="position: absolute; top: -90px; left:54px;">
-            <div id = "41" onclick = "clicked('41')" onmouseout = "end_hover('41', 'hexagon7')" onmouseover = "hover('41')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "41" onclick = "clicked('41')" onmouseout = "end_hover('41', 'hexagon7')" onmouseover = "hover('41')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 
             <div style="position: absolute; top: -90px; left:54px;">
-            <div id = "31" onclick = "clicked('31')" onmouseout = "end_hover('31', 'hexagon7')" onmouseover = "hover('31')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "31" onclick = "clicked('31')" onmouseout = "end_hover('31', 'hexagon7')" onmouseover = "hover('31')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 
             <div style="position: absolute; top: -90px; left:54px;">
-            <div id = "22" onclick = "clicked('22')" onmouseout = "end_hover('22', 'hexagon7')" onmouseover = "hover('22')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "22" onclick = "clicked('22')" onmouseout = "end_hover('22', 'hexagon7')" onmouseover = "hover('22')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 
             <div style="position: absolute; top: -90px; left:54px;">
-            <div id = "12" onclick = "clicked('12')" onmouseout = "end_hover('12', 'hexagon7')" onmouseover = "hover('12')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "12" onclick = "clicked('12')" onmouseout = "end_hover('12', 'hexagon7')" onmouseover = "hover('12')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 
             <div style="position: absolute; top: -90px; left:54px;">
-            <div id = "03" onclick = "clicked('03')" onmouseout = "end_hover('03', 'hexagon7')" onmouseover = "hover('03')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "03" onclick = "clicked('03')" onmouseout = "end_hover('03', 'hexagon7')" onmouseover = "hover('03')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 
             <div style="position: absolute; top: 0px; left: 108px;">
-            <div id = "04" onclick = "clicked('04')" onmouseout = "end_hover('04', 'hexagon7')" onmouseover = "hover('04')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "04" onclick = "clicked('04')" onmouseout = "end_hover('04', 'hexagon7')" onmouseover = "hover('04')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 
             <div style="position: absolute; top:90px; left: -54px;">
-            <div id = "13" onclick = "clicked('13')" onmouseout = "end_hover('13', 'hexagon7')" onmouseover = "hover('13')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "13" onclick = "clicked('13')" onmouseout = "end_hover('13', 'hexagon7')" onmouseover = "hover('13')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 
             <div style="position: absolute; top:90px; left: -54px;">
-            <div id = "23" onclick = "clicked('23')" onmouseout = "end_hover('23', 'hexagon7')" onmouseover = "hover('23')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "23" onclick = "clicked('23')" onmouseout = "end_hover('23', 'hexagon7')" onmouseover = "hover('23')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 
             <div style="position: absolute; top:90px; left: -54px;">
-            <div id = "32" onclick = "clicked('32')" onmouseout = "end_hover('32', 'hexagon7')" onmouseover = "hover('32')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "32" onclick = "clicked('32')" onmouseout = "end_hover('32', 'hexagon7')" onmouseover = "hover('32')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 
             <div style="position: absolute; top:90px; left: -54px;">
-            <div id = "42" onclick = "clicked('42')" onmouseout = "end_hover('42', 'hexagon7')" onmouseover = "hover('42')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "42" onclick = "clicked('42')" onmouseout = "end_hover('42', 'hexagon7')" onmouseover = "hover('42')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 
             <div style="position: absolute; top:90px; left: -54px;">
-            <div id = "51" onclick = "clicked('51')" onmouseout = "end_hover('51', 'hexagon7')" onmouseover = "hover('51')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "51" onclick = "clicked('51')" onmouseout = "end_hover('51', 'hexagon7')" onmouseover = "hover('51')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 
             <div style="position: absolute; top:90px; left: -54px;">
-            <div id = "61" onclick = "clicked('61')" onmouseout = "end_hover('61', 'hexagon7')" onmouseover = "hover('61')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "61" onclick = "clicked('61')" onmouseout = "end_hover('61', 'hexagon7')" onmouseover = "hover('61')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top:90px; left:54px;">
-            <div id = "71" onclick = "clicked('71')" onmouseout = "end_hover('71', 'hexagon7')" onmouseover = "hover('71')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "71" onclick = "clicked('71')" onmouseout = "end_hover('71', 'hexagon7')" onmouseover = "hover('71')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top: -90px; left:54px;">
-            <div id = "62" onclick = "clicked('62')" onmouseout = "end_hover('62', 'hexagon7')" onmouseover = "hover('62')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "62" onclick = "clicked('62')" onmouseout = "end_hover('62', 'hexagon7')" onmouseover = "hover('62')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top: -90px; left:54px;">
-            <div id = "52" onclick = "clicked('52')" onmouseout = "end_hover('52', 'hexagon7')" onmouseover = "hover('52')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "52" onclick = "clicked('52')" onmouseout = "end_hover('52', 'hexagon7')" onmouseover = "hover('52')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top: -90px; left:54px;">
-            <div id = "43" onclick = "clicked('43')" onmouseout = "end_hover('43', 'hexagon7')" onmouseover = "hover('43')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "43" onclick = "clicked('43')" onmouseout = "end_hover('43', 'hexagon7')" onmouseover = "hover('43')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top: -90px; left:54px;">
-            <div id = "33" onclick = "clicked('33')" onmouseout = "end_hover('33', 'hexagon7')" onmouseover = "hover('33')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "33" onclick = "clicked('33')" onmouseout = "end_hover('33', 'hexagon7')" onmouseover = "hover('33')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top: -90px; left:54px;">
-            <div id = "24" onclick = "clicked('24')" onmouseout = "end_hover('24', 'hexagon7')" onmouseover = "hover('24')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "24" onclick = "clicked('24')" onmouseout = "end_hover('24', 'hexagon7')" onmouseover = "hover('24')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top: -90px; left:54px;">
-            <div id = "14" onclick = "clicked('14')" onmouseout = "end_hover('14', 'hexagon7')" onmouseover = "hover('14')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "14" onclick = "clicked('14')" onmouseout = "end_hover('14', 'hexagon7')" onmouseover = "hover('14')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top: -90px; left:54px;">
-            <div id = "05" onclick = "clicked('05')" onmouseout = "end_hover('05', 'hexagon7')" onmouseover = "hover('05')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "05" onclick = "clicked('05')" onmouseout = "end_hover('05', 'hexagon7')" onmouseover = "hover('05')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top: 0px; left: 108px;">
-            <div id = "06" onclick = "clicked('06')" onmouseout = "end_hover('06', 'hexagon7')" onmouseover = "hover('06')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "06" onclick = "clicked('06')" onmouseout = "end_hover('06', 'hexagon7')" onmouseover = "hover('06')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top:90px; left: -54px;">
-            <div id = "15" onclick = "clicked('15')" onmouseout = "end_hover('15', 'hexagon7')" onmouseover = "hover('15')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "15" onclick = "clicked('15')" onmouseout = "end_hover('15', 'hexagon7')" onmouseover = "hover('15')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top:90px; left: -54px;">
-            <div id = "25" onclick = "clicked('25')" onmouseout = "end_hover('25', 'hexagon7')" onmouseover = "hover('25')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "25" onclick = "clicked('25')" onmouseout = "end_hover('25', 'hexagon7')" onmouseover = "hover('25')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top:90px; left: -54px;">
-            <div id = "34" onclick = "clicked('34')" onmouseout = "end_hover('34', 'hexagon7')" onmouseover = "hover('34')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "34" onclick = "clicked('34')" onmouseout = "end_hover('34', 'hexagon7')" onmouseover = "hover('34')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top:90px; left: -54px;">
-            <div id = "44" onclick = "clicked('44')" onmouseout = "end_hover('44', 'hexagon7')" onmouseover = "hover('44')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "44" onclick = "clicked('44')" onmouseout = "end_hover('44', 'hexagon7')" onmouseover = "hover('44')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top:90px; left: -54px;">
-            <div id = "53" onclick = "clicked('53')" onmouseout = "end_hover('53', 'hexagon7')" onmouseover = "hover('53')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "53" onclick = "clicked('53')" onmouseout = "end_hover('53', 'hexagon7')" onmouseover = "hover('53')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top:90px; left: -54px;">
-            <div id = "63" onclick = "clicked('63')" onmouseout = "end_hover('63', 'hexagon7')" onmouseover = "hover('63')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "63" onclick = "clicked('63')" onmouseout = "end_hover('63', 'hexagon7')" onmouseover = "hover('63')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top:90px; left: -54px;">
-            <div id = "72" onclick = "clicked('72')" onmouseout = "end_hover('72', 'hexagon7')" onmouseover = "hover('72')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "72" onclick = "clicked('72')" onmouseout = "end_hover('72', 'hexagon7')" onmouseover = "hover('72')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top:90px; left: -54px;">
-            <div id = "82" onclick = "clicked('82')" onmouseout = "end_hover('82', 'hexagon7')" onmouseover = "hover('82')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "82" onclick = "clicked('82')" onmouseout = "end_hover('82', 'hexagon7')" onmouseover = "hover('82')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top: 0px; left: 108px;">
-            <div id = "83" onclick = "clicked('83')" onmouseout = "end_hover('83', 'hexagon7')" onmouseover = "hover('83')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "83" onclick = "clicked('83')" onmouseout = "end_hover('83', 'hexagon7')" onmouseover = "hover('83')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top: -90px; left:54px;">
-            <div id = "73" onclick = "clicked('73')" onmouseout = "end_hover('73', 'hexagon7')" onmouseover = "hover('73')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "73" onclick = "clicked('73')" onmouseout = "end_hover('73', 'hexagon7')" onmouseover = "hover('73')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top: -90px; left:54px;">
-            <div id = "64" onclick = "clicked('64')" onmouseout = "end_hover('64', 'hexagon7')" onmouseover = "hover('64')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "64" onclick = "clicked('64')" onmouseout = "end_hover('64', 'hexagon7')" onmouseover = "hover('64')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top: -90px; left:54px;">
-            <div id = "54" onclick = "clicked('54')" onmouseout = "end_hover('54', 'hexagon7')" onmouseover = "hover('54')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "54" onclick = "clicked('54')" onmouseout = "end_hover('54', 'hexagon7')" onmouseover = "hover('54')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top: -90px; left:54px;">
-            <div id = "45" onclick = "clicked('45')" onmouseout = "end_hover('45', 'hexagon7')" onmouseover = "hover('45')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "45" onclick = "clicked('45')" onmouseout = "end_hover('45', 'hexagon7')" onmouseover = "hover('45')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top: -90px; left:54px;">
-            <div id = "35" onclick = "clicked('35')" onmouseout = "end_hover('35', 'hexagon7')" onmouseover = "hover('35')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "35" onclick = "clicked('35')" onmouseout = "end_hover('35', 'hexagon7')" onmouseover = "hover('35')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top: -90px; left:54px;">
-            <div id = "26" onclick = "clicked('26')" onmouseout = "end_hover('26', 'hexagon7')" onmouseover = "hover('26')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "26" onclick = "clicked('26')" onmouseout = "end_hover('26', 'hexagon7')" onmouseover = "hover('26')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top: -90px; left:54px;">
-            <div id = "16" onclick = "clicked('16')" onmouseout = "end_hover('16', 'hexagon7')" onmouseover = "hover('16')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "16" onclick = "clicked('16')" onmouseout = "end_hover('16', 'hexagon7')" onmouseover = "hover('16')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top:90px; left:54px;">
-            <div id = "27" onclick = "clicked('27')" onmouseout = "end_hover('27', 'hexagon7')" onmouseover = "hover('27')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "27" onclick = "clicked('27')" onmouseout = "end_hover('27', 'hexagon7')" onmouseover = "hover('27')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top:90px; left: -54px;">
-            <div id = "36" onclick = "clicked('36')" onmouseout = "end_hover('36', 'hexagon7')" onmouseover = "hover('36')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "36" onclick = "clicked('36')" onmouseout = "end_hover('36', 'hexagon7')" onmouseover = "hover('36')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top:90px; left: -54px;">
-            <div id = "46" onclick = "clicked('46')" onmouseout = "end_hover('46', 'hexagon7')" onmouseover = "hover('46')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "46" onclick = "clicked('46')" onmouseout = "end_hover('46', 'hexagon7')" onmouseover = "hover('46')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top:90px; left: -54px;">
-            <div id = "55" onclick = "clicked('55')" onmouseout = "end_hover('55', 'hexagon7')" onmouseover = "hover('55')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "55" onclick = "clicked('55')" onmouseout = "end_hover('55', 'hexagon7')" onmouseover = "hover('55')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top:90px; left: -54px;">
-            <div id = "65" onclick = "clicked('65')" onmouseout = "end_hover('65', 'hexagon7')" onmouseover = "hover('65')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "65" onclick = "clicked('65')" onmouseout = "end_hover('65', 'hexagon7')" onmouseover = "hover('65')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top:90px; left: -54px;">
-            <div id = "74" onclick = "clicked('74')" onmouseout = "end_hover('74', 'hexagon7')" onmouseover = "hover('74')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "74" onclick = "clicked('74')" onmouseout = "end_hover('74', 'hexagon7')" onmouseover = "hover('74')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top:90px; left: -54px;">
-            <div id = "84" onclick = "clicked('84')" onmouseout = "end_hover('84', 'hexagon7')" onmouseover = "hover('84')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "84" onclick = "clicked('84')" onmouseout = "end_hover('84', 'hexagon7')" onmouseover = "hover('84')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top: 0px; left: 108px;">
-            <div id = "85" onclick = "clicked('85')" onmouseout = "end_hover('85', 'hexagon7')" onmouseover = "hover('85')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "85" onclick = "clicked('85')" onmouseout = "end_hover('85', 'hexagon7')" onmouseover = "hover('85')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top: -90px; left:54px;">
-            <div id = "75" onclick = "clicked('75')" onmouseout = "end_hover('75', 'hexagon7')" onmouseover = "hover('75')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "75" onclick = "clicked('75')" onmouseout = "end_hover('75', 'hexagon7')" onmouseover = "hover('75')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top: -90px; left:54px;">
-            <div id = "66" onclick = "clicked('66')" onmouseout = "end_hover('66', 'hexagon7')" onmouseover = "hover('66')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "66" onclick = "clicked('66')" onmouseout = "end_hover('66', 'hexagon7')" onmouseover = "hover('66')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top: -90px; left:54px;">
-            <div id = "56" onclick = "clicked('56')" onmouseout = "end_hover('56', 'hexagon7')" onmouseover = "hover('56')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "56" onclick = "clicked('56')" onmouseout = "end_hover('56', 'hexagon7')" onmouseover = "hover('56')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top: -90px; left:54px;">
-            <div id = "47" onclick = "clicked('47')" onmouseout = "end_hover('47', 'hexagon7')" onmouseover = "hover('47')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "47" onclick = "clicked('47')" onmouseout = "end_hover('47', 'hexagon7')" onmouseover = "hover('47')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top: -90px; left:54px;">
-            <div id = "37" onclick = "clicked('37')" onmouseout = "end_hover('37', 'hexagon7')" onmouseover = "hover('37')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "37" onclick = "clicked('37')" onmouseout = "end_hover('37', 'hexagon7')" onmouseover = "hover('37')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top:90px; left:54px;">
-            <div id = "48" onclick = "clicked('48')" onmouseout = "end_hover('48', 'hexagon7')" onmouseover = "hover('48')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "48" onclick = "clicked('48')" onmouseout = "end_hover('48', 'hexagon7')" onmouseover = "hover('48')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top:90px; left: -54px;">
-            <div id = "57" onclick = "clicked('57')" onmouseout = "end_hover('57', 'hexagon7')" onmouseover = "hover('57')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "57" onclick = "clicked('57')" onmouseout = "end_hover('57', 'hexagon7')" onmouseover = "hover('57')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top:90px; left: -54px;">
-            <div id = "67" onclick = "clicked('67')" onmouseout = "end_hover('67', 'hexagon7')" onmouseover = "hover('67')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "67" onclick = "clicked('67')" onmouseout = "end_hover('67', 'hexagon7')" onmouseover = "hover('67')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top:90px; left: -54px;">
-            <div id = "76" onclick = "clicked('76')" onmouseout = "end_hover('76', 'hexagon7')" onmouseover = "hover('76')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "76" onclick = "clicked('76')" onmouseout = "end_hover('76', 'hexagon7')" onmouseover = "hover('76')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			<div style="position: absolute; top:90px; left: -54px;">
-            <div id = "86" onclick = "clicked('86')" onmouseout = "end_hover('86', 'hexagon7')" onmouseover = "hover('86')" class="hexagon7" style="position: relative; "><p style="padding: 15px 30px; font-size:180%"></p></div>
+            <div id = "86" onclick = "clicked('86')" onmouseout = "end_hover('86', 'hexagon7')" onmouseover = "hover('86')" class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>
 			
 			
     </body>
