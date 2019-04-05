@@ -107,8 +107,26 @@
                                 document.getElementById(i + "" + j).setAttribute('class', 'hexagon2');
                                 document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
                             }
-
-                            
+                            else if(myGameBoard[i][j].player_id == "3")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon3');
+                                document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
+                            }
+                            else if(myGameBoard[i][j].player_id == "4")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon4');
+                                document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
+                            }
+                            else if(myGameBoard[i][j].player_id == "5")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon5');
+                                document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
+                            }
+                            else if(myGameBoard[i][j].player_id == "6")
+                            {
+                                document.getElementById(i + "" + j).setAttribute('class', 'hexagon6');
+                                document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
+                            }
                         }
                         if(left_increase)
                         {
