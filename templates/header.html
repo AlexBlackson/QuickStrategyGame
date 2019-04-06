@@ -1,0 +1,11 @@
+<title>Quick Strategy Game</title>
+{% if username and username != ""%}
+    <a href= "{{ url_for("logout") }}">Logout</a>
+{% else %}
+    <a href= "{{ url_for("login") }}">Login</a>
+{%endif%}
+<br/>
+<h1>Quick Strategy Game</h1>
+<div>
+<br/>
+</div>
