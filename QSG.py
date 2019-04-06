@@ -17,11 +17,12 @@ app.config.update(dict(
     PASSWORD='pass',
     SQLALCHEMY_TRACK_MODIFICATIONS=False,
     SQLALCHEMY_DATABASE_URI='sqlite:///' +
-    os.path.join(app.root_path, 'game.db')
+    os.path.join(app.root_path, 'game.db'),
+    TEMPLATES_AUTO_RELOAD = True
 ))
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 app.secret_key = "trashSecurity"
-# ma = Marshmallow(app)
+ma = Marshmallow(app)
 db.init_app(app)
 app.app_context().push()
 apimanager = APIManager(app, flask_sqlalchemy_db=db)
@@ -52,6 +53,9 @@ def initdb_command():
     createGameBoard()
     usrs = User.query.all()
 
+@app.route("/trading_tests")
+def trading_tests():
+    return render_template("trading.html.j2")
 
 def isUsernameUnique(username):
     users = User.query.order_by(User.user_id.desc()).all()
@@ -104,9 +108,11 @@ def logout():
     return render_template("login.html", invalid=False)
 
 
-@app.route("/map/", methods=["GET"])
-def map():
-    return render_template("map.html")
+@app.route("/<game_id>/map/", methods=["GET"])
+def map(game_id):
+    game = Game.query.filter_by(game_id=game_id).first()
+    print(game.game_id)
+    return render_template("map.html", game=game)
 
 
 def isUsernameUnique(name):
@@ -214,56 +220,23 @@ def turn_test():
 # Note: Tiles have a TerritoryType object as well
 # Note: Can use curl to access this endpoint if no frontend
 
-
-@app.route("/<game_id>/gameboard", methods=["GET"])
-def gameboard(game_id):
-    if request.method == "GET":
-        print("GET")
-        # Create gameboard JSON Object
-        game = Game.query.filter_by(game_id=game_id).first()
-        tiles = game.gameboard.tiles
-        tile_matrix = [[0 for x in range(0, 9)] for y in range(0, 9)]
-        for t in tiles:
-            tile_matrix[t.row][t.col] = t.as_dict()
-        return json.dumps(tile_matrix), 200
-
-
-@app.route("/<game_id>/gameboard/tiles/<tile_id>", methods=["GET", "POST"])
-def tile(game_id, tile_id):
+@app.route("/game/<game_id>/next_turn", methods=["GET","POST"])
+def turn(game_id):
+    print("*")
+    g = Game.query.filter_by(game_id=game_id).first()
+    turn = g.turn
+    order = json.loads(turn.order)
     if request.method == "POST":
-        tile = request.get_json()
-        db_tile = Tile.query.filter_by(tile_id=tile_id).first()
-        db_tile.territoryName = tile['territoryName']
-        db_tile.multiplier = tile['multiplier']
-        db_tile.player_id = tile['player_id']
-        db_tile.unit_count = tile['unit_count']
-        print(Tile.query.filter_by(tile_id=tile_id).first().territoryName)
+        # if turn.round == 0:
+        next_idx = (g.turn.order_idx+1)%len(order)
+        turn.order_idx = next_idx
+        if next_idx == 0:
+            turn.round += 1
         db.session.commit()
-        return json.dumps(Tile.query.filter_by(tile_id=tile_id).first().as_dict()), 201
+        return json.dumps(TurnSchema().dump(turn).data), 201
     elif request.method == "GET":
-        # print(Tile.query.filter_by(tile_id=tile_id).first().as_dict())
-        return json.dumps(Tile.query.filter_by(tile_id=tile_id).first().as_dict()), 200
+        return json.dumps(TurnSchema().dump(turn).data), 200
 
-# @app.route("/<game_id>/turn", methods=["GET","POST"])
-# def turn(game_id):
-#     print("*")
-#     print(Turn.query.all()[0].turn_id)
-#     print(type(int(game_id)))
-#     g = Game.query.filter_by(game_id=game_id).first()
-#     print(g.turn_id)
-#     turn = Turn.query.filter_by(turn_id=g.turn_id).first()
-#     order = json.loads(turn.order)
-#     if request.method == "POST":
-#         if round == 0:
-#             next_idx = (g.turn.idx+1)%len(turn)
-#             turn.idx = next_idx
-#             if next_idx == 0:
-#                 turn.round += 1
-#         db.session.commit()
-#         return turn.as_dict(), 201
-#     elif request.method == "GET":
-#         return json.dumps(turn.as_dict()), 200
-#
 
 
 @app.route("/testing/", methods=["GET", "POST"])
