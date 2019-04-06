@@ -6,7 +6,8 @@
         <script type = "text/javascript">
 
         var data = JSON.stringify({'tile_id': 1, 'gameboard_id': 1, 'row': 0, 'col': 0, 'territoryName': 'frogs', 'multiplier': '[0.25, 0.5, 0.75]', 'player_id': 2, 'unit_count': 5});
-        postGameBoard(data);
+        //postGameBoard(data);
+        getGameTurn();
 
         function postGameBoard(data)
         {
@@ -30,13 +31,26 @@
             setTimeout(getGameBoard, 2000)
 
             var req = new XMLHttpRequest();
-            req.open('GET', '/1/gameboard');
             req.onreadystatechange = function () {
                 if (req.readyState == 4 && req.status == 200) {
                     console.log(req.responseText);
                 }
             }
             req.open("GET", "/1/gameboard", true);
+            req.send();
+        }
+
+        function getGameTurn()
+        {
+            setTimeout(getGameBoard, 2000)
+
+            var req = new XMLHttpRequest();
+            req.onreadystatechange = function () {
+                if (req.readyState == 4 && req.status == 200) {
+                    console.log(req.responseText);
+                }
+            }
+            req.open("GET", "/1/turn", true);
             req.send();
         }
 
