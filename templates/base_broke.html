@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 	<head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-		<title>{% block title %}Quick Strategy Game{% endblock %}</title>
-		{% block script %}{% endblock %}
+		<title>Quick Strategy Game</title>
 	</head>
 	<body>
 		{% if username and username != ""%}
@@ -15,8 +15,6 @@
 		<h1>Quick Strategy Game</h1>
 		<div>
 		<br/>
-		{% block body %}
-		{% endblock %}
 		</div>
 	</body>
 </html>
