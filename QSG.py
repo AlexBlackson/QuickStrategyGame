@@ -237,7 +237,17 @@ def turn(game_id):
     elif request.method == "GET":
         return json.dumps(TurnSchema().dump(turn).data), 200
 
-
+@app.route("/<game_id>/gameboard", methods=["GET"])
+def gameboard(game_id):
+    if request.method == "GET":
+        print("GET")
+        # Create gameboard JSON Object
+        game = Game.query.filter_by(game_id=game_id).first()
+        tiles = game.gameboard.tiles
+        tile_matrix = [[0 for x in range(0, 9)] for y in range(0, 9)]
+        for t in tiles:
+            tile_matrix[t.row][t.col] = t.as_dict()
+        return json.dumps(tile_matrix), 200
 
 @app.route("/testing/", methods=["GET", "POST"])
 def testing():
