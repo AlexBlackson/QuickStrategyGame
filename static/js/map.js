@@ -84,9 +84,10 @@ function getGameBoard()
     setTimeout(getGameBoard, 2000)
 
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/1/gameboard');
+    xhr.open('GET', '../../api/gameboard/1');
     xhr.onload = function() {
         if (xhr.status === 200) {
+            console.log(xhr.responseText);
             myGameBoard = JSON.parse(xhr.responseText);
             var i;
             var left = 2;
@@ -96,32 +97,32 @@ function getGameBoard()
             {
                 for(j = left; j < right; j++)
                 {
-                    if(myGameBoard[i][j].player_id == "1")
+                    if(myGameBoard.tiles[i][j].player_id == "1")
                     {
                         document.getElementById(i + "" + j).setAttribute('class', 'hexagon1');
                         document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
                     }
-                    else if(myGameBoard[i][j].player_id == "2")
+                    else if(myGameBoard.tiles[i][j].player_id == "2")
                     {
                         document.getElementById(i + "" + j).setAttribute('class', 'hexagon2');
                         document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
                     }
-                    else if(myGameBoard[i][j].player_id == "3")
+                    else if(myGameBoard.tiles[i][j].player_id == "3")
                     {
                         document.getElementById(i + "" + j).setAttribute('class', 'hexagon3');
                         document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
                     }
-                    else if(myGameBoard[i][j].player_id == "4")
+                    else if(myGameBoard.tiles[i][j].player_id == "4")
                     {
                         document.getElementById(i + "" + j).setAttribute('class', 'hexagon4');
                         document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
                     }
-                    else if(myGameBoard[i][j].player_id == "5")
+                    else if(myGameBoard.tiles[i][j].player_id == "5")
                     {
                         document.getElementById(i + "" + j).setAttribute('class', 'hexagon5');
                         document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
                     }
-                    else if(myGameBoard[i][j].player_id == "6")
+                    else if(myGameBoard.tiles[i][j].player_id == "6")
                     {
                         document.getElementById(i + "" + j).setAttribute('class', 'hexagon6');
                         document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
