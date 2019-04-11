@@ -163,7 +163,7 @@ def createGameBoard():
         arr = []
         for j in range(0, 9):
             t = Tile(players[random.randint(0, 2)], gameboard,
-                     i, j, 'Grass', json.dumps([.25, .5, .75]), 0)
+                     i, j, 'Grass', .25, .5, 0)
             db.session.add(t)
             arr.append(t)
         board.append(arr)
@@ -202,7 +202,8 @@ def tile_post_test(game_id, tile_id, tile):
     print(tile)
     db_tile = Tile.query.filter_by(tile_id=tile_id).first()
     db_tile.territoryName = tile['territoryName']
-    db_tile.multiplier = tile['multiplier']
+    db_tile.luck = tile['luck']
+    db_tile.income = tile['income']
     db_tile.player_id = tile['player_id']
     db_tile.unit_count = tile['unit_count']
 
@@ -232,6 +233,7 @@ def turn(game_id):
         turn.order_idx = next_idx
         if next_idx == 0:
             turn.round += 1
+
         db.session.commit()
         return json.dumps(TurnSchema().dump(turn).data), 201
     elif request.method == "GET":

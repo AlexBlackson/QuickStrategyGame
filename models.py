@@ -67,14 +67,16 @@ class Tile(db.Model):
     col = db.Column(db.Integer, unique=False)
     # mutable
     territoryName = db.Column(db.String(80), nullable=False, unique=False)
-    multiplier = db.Column(db.String(80), unique=False)
+    income = db.Column(db.Integer, unique=False)
+    luck = db.Column(db.Integer, unique=False)
     player_id = db.Column(db.Integer, db.ForeignKey(
         'player.player_id'), nullable=True)
     unit_count = db.Column(db.Integer, unique=False)
 
-    def __init__(self, player, gameboard, row, col, territoryName, multiplier, unit_count):
+    def __init__(self, player, gameboard, row, col, territoryName, luck, income, unit_count):
         self.territoryName = territoryName
-        self.multiplier = multiplier
+        self.income = income
+        self.luck = luck
         if player != None:
             self.player_id = player.player_id
         else:
