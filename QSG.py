@@ -123,9 +123,9 @@ def isUsernameUnique(name):
 
 
 def createUsers():
-    db.session.add(User('craig3', 'p'))
-    db.session.add(User('bob3', 'p'))
-    db.session.add(User('matt6', 'p'))
+    db.session.add(User('p1', 'p'))
+    db.session.add(User('p2', 'p'))
+    db.session.add(User('p3', 'p'))
     db.session.commit()
 
 # creates a player, updates db, and assigns to game
