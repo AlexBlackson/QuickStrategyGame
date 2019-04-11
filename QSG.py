@@ -5,7 +5,7 @@ import random
 import math
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
 from flask_restless import APIManager
-from Models import *
+from models import *
 
 # create our yuge application
 app = Flask(__name__)
