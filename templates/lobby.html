@@ -7,7 +7,7 @@
 	<ul>
 		{% for g in games %}
 		<li>
-			<a href = "{{ url_for("map", game_id = g.name ) }}" >{{ g.name }}</a>
+			<a href = "{{ url_for("map", game_id = g.game_id ) }}" >{{ g.name }}</a>
 		</li>
 		{% endfor %}
 	</ul>

@@ -247,13 +247,13 @@
   
   .hexagon8:before {
     bottom: 100%;
-    border-bottom: 28.87px solid #66ccff;
+    border-bottom: 28.87px solid #f265da;
   }
   
   .hexagon8:after {
     top: 100%;
     width: 0;
-    border-top: 28.87px solid #66ccff;
+    border-top: 28.87px solid #f265da;
   }
 
   .hexagon9 {
