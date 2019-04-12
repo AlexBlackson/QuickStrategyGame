@@ -39,14 +39,16 @@ class Player(db.Model):
 
 class Game(db.Model):
     game_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, unique=True)
     players = db.relationship('Player', backref='game', lazy=False)
     gameboard = db.relationship(
         'Gameboard', backref='game', lazy=False, uselist=False)
     gameOver = db.Column(db.Boolean, unique=False)
     turn = db.relationship('Turn', backref='game', lazy=False, uselist=False)
 
-    def __init__(self, turn, gameboard=None):
+    def __init__(self, name, turn, gameboard=None):
         self.gameOver = False
+        self.name = name
         self.turn = turn
         if gameboard != None:
             self.gameboard = gameboard

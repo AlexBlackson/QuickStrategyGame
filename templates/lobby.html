@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block body %}
+	<h1> Lobby! </h1>
+	<h1> Welcome {{ username }}! </h1>
+	{% if games %}
+	<ul>
+		{% for g in games %}
+		<li>
+			<a href = "{{ url_for("map", game_id = g.name ) }}" >{{ g.name }}</a>
+		</li>
+		{% endfor %}
+	</ul>
+	{% else %}
+		<h2>Currently no games available</h2>
+	{% endif %}
+	<br/>
+	<form action="" method="post">
+		New game name:<input type="text" name="gameName" />
+		<br/>
+		<input type="submit" value="Create new game!"/>
+	</form>
+{% endblock %}

@@ -114,6 +114,16 @@ def map(game_id):
     print(game.game_id)
     return render_template("map.html", game=game)
 
+@app.route("/lobby", methods = ["GET","POST"])
+def lobby():
+	if request.method == "POST":
+		newGame = Game(request.form["gameName"], Turn(), Gameboard())
+		db.session.add(newGame)
+
+		db.session.commit()
+
+	return render_template("lobby.html", username=session["username"], games=Game.query.all(), invalid=False)
+
 
 def isUsernameUnique(name):
     if User.query.filter_by(username=name).first():
@@ -141,7 +151,7 @@ def createPlayer(user, game):
 def createGame(players):
     turn = Turn()
     db.session.add(turn)
-    g = Game(turn, Gameboard())
+    g = Game("test", turn, Gameboard())
     for p in players:
         createPlayer(p, g)
     order = [p.player_id for p in g.players]
