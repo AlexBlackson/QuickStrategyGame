@@ -7,6 +7,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, render_t
 from flask_restless import APIManager
 from Models import *
 
+
 # create our yuge application
 app = Flask(__name__)
 # Load default config and override config from an environment variable
@@ -133,6 +134,8 @@ def createUsers():
 
 def createPlayer(user, game):
     p = Player(User.query.filter_by(user_id=user.user_id).first())
+    p.money = 0.0
+    p.resources = 0.0
     db.session.add(p)
     db.session.commit()
     game.players.append(p)
@@ -163,7 +166,7 @@ def createGameBoard():
         arr = []
         for j in range(0, 9):
             t = Tile(players[random.randint(0, 2)], gameboard,
-                     i, j, 'Grass', .25, .5, 0)
+                     i, j, 'Grass', .25, .5, random.randint(0,6))
             db.session.add(t)
             arr.append(t)
         board.append(arr)
@@ -241,8 +244,8 @@ def turn(game_id):
 
 @app.route("/<game_id>/gameboard", methods=["GET"])
 def gameboard(game_id):
+
     if request.method == "GET":
-        print("GET")
         # Create gameboard JSON Object
         game = Game.query.filter_by(game_id=game_id).first()
         tiles = game.gameboard.tiles

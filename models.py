@@ -26,9 +26,8 @@ class Player(db.Model):
     player_id = db.Column(db.Integer, primary_key=True)
     user = db.relationship('User', backref='player', lazy=False, uselist=False)
     name = db.Column(db.String(80), unique=False)
-    resources = db.Column(db.String, unique=False)
+    resources = db.Column(db.Float, unique=False)
     money = db.Column(db.Float, unique=False)
-    tiles = db.relationship('Tile', backref='player', lazy=False)
     game_id = db.Column(db.Integer, db.ForeignKey(
         'game.game_id'), nullable=True)
 

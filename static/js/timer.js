@@ -2,10 +2,11 @@ var timeLeft = 10;
 var players = ["", "", "", "", "", ""];
 var game_size;
 var turn_obj;
-var turn_int;
+var turn_int = 0;
 var player_id;
 var player_money = 0;
 var player_luck = 0;
+var player;;
 (function()
 {
     var xhr = new XMLHttpRequest();
@@ -26,43 +27,43 @@ var player_luck = 0;
                 if(players[i] == localStorage.getItem('usrname'))
                 {
                     player_id = i;
+                    localStorage.setItem('player_id', player_id);
                 }
             }
-            console.log(players[0]);
-            console.log(players[1]);
-            console.log(players[2]);
         }
     }
     xhr.send();
 }());
 
-var turnTimer = setInterval(function(){
+    var turnTimer = setInterval(function(){
     var money_totals = localStorage.getItem('money_totals');
     var luck_totals = localStorage.getItem('luck_totals');
+
+    
+
     if(timeLeft == 10)
     {
         // GET turn
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', '../../game/1/next_turn');
-        xhr.onload = function() 
+        turn_int++;
+        if(turn_int>= game_size)
+            turn_int = 0;
+        var xhr1 = new XMLHttpRequest();
+        xhr1.open('GET', '../../api/player/'+(player_id+1));
+        xhr1.onload = function()
         {
-            if (xhr.status === 200) 
+            if(xhr1.status === 200)
             {
-                console.log(xhr.responseText);
-                turn_obj = JSON.parse(xhr.responseText);
-                turn_int = parseInt(turn_obj.order_idx);
-                document.getElementById("turnLabel").innerHTML = "Turn: " + players[turn_int];
+                player = JSON.parse(xhr1.responseText);
+                document.getElementById("stats_display").innerHTML = "Money: " + player.money + " Luck: " + player.resources;
             }
         }
-        xhr.send();
-
-        player_money += parseFloat(money_totals[player_id]);
-        player_luck += parseFloat(luck_totals[player_id]);
+        xhr1.send();
+        document.getElementById("turnLabel").innerHTML = "Turn: " + players[turn_int];
     }   
+
+    
     document.getElementById("countdown").innerHTML = timeLeft + " seconds";
     timeLeft -= 1;
-
-    document.getElementById("stats_display").innerHTML = "Money: " + player_money.toString() + " Luck: " + player_luck.toString();
 
     if(timeLeft <= 0){
         var xhttp = new XMLHttpRequest();
@@ -70,6 +71,30 @@ var turnTimer = setInterval(function(){
 
         xhttp.setRequestHeader('Content-Type', 'application/json');
         xhttp.send(JSON.stringify(turn_obj, null, 1));
+
+        var xhttp2 = new XMLHttpRequest();
+        xhttp2.open('PUT', '../../api/player/'+(player_id+1));
+
+        var inc = parseFloat(money_totals.split(",")[player_id]);
+        var inc2 = parseFloat(luck_totals.split(",")[player_id]);
+        var p_money = parseFloat(player.money) + inc + money_deduct;
+        var p_luck = inc2;
+        player.money = p_money;
+        player.resources = p_luck;
+        xhttp2.setRequestHeader('Content-Type', 'application/json');
+        xhttp2.send(JSON.stringify(player, null, 1));
+
+        xhttp.open('PUT', '../../api/gameboard/1');
+                        
+        console.log(load_gb.tiles);
+    
+        xhttp.setRequestHeader('Content-Type', 'application/json');
+        xhttp.onreadystatechange = function(){
+            console.log(xhttp.responseText);
+        }
+        xhttp.send(JSON.stringify(load_gb));
+
         timeLeft = 10;
+        money_deduct = 0;
     }
 }, 1000)
