@@ -12,7 +12,7 @@
     </head>
     <script>
     console.log('{{game.game_id}}')
-    assign_game('{{game.game_id}}')
+    assign_game('{{game.game_id}}', '{{session['username']}}');
     </script>
     <body>
 
@@ -26,7 +26,7 @@
         {%block body%}
 
 
-        <h1 class="text-center">Money: 0; Territories: 0 <button class="btn btn-primary  btn-inline" onclick="trade({{game.game_id}})">Trade</button></h1>
+        <h1 class="text-center">Money: 0; Territories: 0 <button class="btn btn-primary  btn-inline" onclick="trade({{game.game_id}}, '{{session['username']}}')">Trade</button></h1>
         <span id="board">
             <div style="position: absolute; top: 100px; left: 700px;" >
             <div id = "02" onmouseout = "end_hover('02', 'hexagon7')" onmouseover = "hover('02')" onclick = "clicked('02')"  class="hexagon7" style="position: relative; "><p style="padding: 15px 27px; font-size:180%"></p></div>

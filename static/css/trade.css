@@ -1,41 +1,4 @@
-#fade {
-    position: absolute;
-    display: none;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 2;
-    cursor: pointer;
-}
-#board{
-    display: block
-}
 
-/* #overlay {
-    position: absolute;
-    display: none;
-    width: 75%;
-    height: 75%;
-    background-color: rgba(63, 191, 191, 1);
-    z-index: 2;
-    cursor: pointer;
-} */
-html, body {
-    margin: 0;
-    min-height: 100%;
-}
-body {
-    position: relative; /* needed for the overlay to extend when you scroll */
-    /* general styles */
-    padding: 30px;
-}
-.overlay_container{
-
-}
 #overlay{
     /* some styles to position the modal at the center of the page */
 
@@ -53,4 +16,11 @@ body {
     /* needed styles for the overlay */
     z-index: 10; /* keep on top of other elements on the page */
     outline: 9999px solid rgba(0,0,0,0.5);
+}
+.select-divs{
+    line-height: 0px;
+}
+td{
+    padding-left: 10px !important;
+    padding-right: 10px !important;
 }

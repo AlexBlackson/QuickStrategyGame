@@ -4,10 +4,13 @@ myvar = setTimeout(getGameBoard,2000);
 var has_clicked = false;
 var clicked_id;
 var game;
+var current_player;
 
-function assign_game(g){
+function assign_game(g, player){
     game = g;
+    current_player = player;
     console.log(game)
+    console.log(player);
 }
 
 

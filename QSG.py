@@ -84,6 +84,7 @@ def register():
             session["username"] = request.form["username"]
             return redirect(url_for("users", username=session["username"]))
         else:
+            print("Getting register")
             return render_template('createAccount.html', unique=False)
     return render_template("createAccount.html", unique=True)
 
@@ -99,6 +100,7 @@ def login():
         else:
             session["username"] = request.form["username"]
             return redirect(url_for("users", username=session["username"]))
+    print("Getting login")
     return render_template("login.html", invalid=False)
 
 
