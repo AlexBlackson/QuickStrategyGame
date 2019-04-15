@@ -21,7 +21,7 @@ var add_troops = false;
 var old_y;
 var old_x;
 
-function assign_game(g){
+function assign_game(g, player){
     game = g;
 }
 
@@ -61,7 +61,7 @@ function hover(id, color) {
     par.appendChild(h1);
     par.appendChild(h2);
     par.appendChild(h3);
-    
+
     var x = event.clientX;
     var y = event.clientY;
 
@@ -71,7 +71,7 @@ function hover(id, color) {
 }
 
 function end_hover(id, revert)
-{ 
+{
     if(myGameBoard[parseInt(id.charAt(0))][parseInt(id.charAt(1))].player_id == "1")
     {
         document.getElementById(id).setAttribute('class', 'hexagon1');
@@ -162,10 +162,10 @@ function clicked(id)
                             myGameBoard[parseInt(id.charAt(0))][parseInt(id.charAt(1))].player_id = (player_id+1);
                         }
                             myGameBoard[parseInt(id.charAt(0))][parseInt(id.charAt(1))].unit_count = attacker_number - 1;
-                        
+
                             myGameBoard[parseInt(clicked_id.charAt(0))][parseInt(clicked_id.charAt(1))].unit_count = 1;
-                            
-                        
+
+
                     }
 
                     var cb;
@@ -181,7 +181,7 @@ function clicked(id)
 
                     var xhttp = new XMLHttpRequest();
                     xhttp.open('PUT', '../../api/gameboard/1');
-                    
+
                     console.log(load_gb.tiles);
 
                     xhttp.setRequestHeader('Content-Type', 'application/json');
@@ -210,7 +210,7 @@ function clicked(id)
 
                     var xhttp = new XMLHttpRequest();
                     xhttp.open('PUT', '../../api/gameboard/1');
-                    
+
                     console.log(load_gb.tiles);
 
                     xhttp.setRequestHeader('Content-Type', 'application/json');
@@ -226,9 +226,9 @@ function clicked(id)
         money_deduct-=10;
 
         myGameBoard[parseInt(id.charAt(0))][parseInt(id.charAt(1))].unit_count = (parseInt(myGameBoard[parseInt(id.charAt(0))][parseInt(id.charAt(1))].unit_count)+1);
-    
-    
-    
+
+
+
         var cb;
         var cb2;
         for(cb = 0; cb < 9; cb++)
@@ -239,12 +239,12 @@ function clicked(id)
             }
         }
         has_clicked = false;
-    
+
         var xhttp = new XMLHttpRequest();
         xhttp.open('PUT', '../../api/gameboard/1');
-                        
+
         console.log(load_gb.tiles);
-    
+
         xhttp.setRequestHeader('Content-Type', 'application/json');
         xhttp.onreadystatechange = function(){
             console.log(xhttp.responseText);
@@ -289,7 +289,7 @@ function getGameBoard()
                     temp_luck_totals[pid-1] += parseFloat(myGameBoard[i][j].luck);
                     localStorage.setItem('money_totals', money_totals);
                     localStorage.setItem('luck_totals', luck_totals);
-                    
+
                     if(!(document.getElementById(i + "" + j).getAttribute('class') == 'hexagon8'))
                     {
                         if(myGameBoard[i][j].player_id == "1")

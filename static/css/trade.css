@@ -38,7 +38,6 @@ body {
 }
 .overlay_container{
 
-}
 #overlay{
     /* some styles to position the modal at the center of the page */
 
@@ -56,4 +55,11 @@ body {
     /* needed styles for the overlay */
     z-index: 10; /* keep on top of other elements on the page */
     outline: 9999px solid rgba(0,0,0,0.5);
+}
+.select-divs{
+    line-height: 0px;
+}
+td{
+    padding-left: 10px !important;
+    padding-right: 10px !important;
 }

@@ -85,6 +85,7 @@ def register():
             session["username"] = request.form["username"]
             return redirect(url_for("users", username=session["username"]))
         else:
+            print("Getting register")
             return render_template('createAccount.html', unique=False)
     return render_template("createAccount.html", unique=True)
 
@@ -100,6 +101,7 @@ def login():
         else:
             session["username"] = request.form["username"]
             return redirect(url_for("users", username=session["username"]))
+    print("Getting login")
     return render_template("login.html", invalid=False)
 
 
@@ -287,3 +289,38 @@ def list_routes():
 
         for line in sorted(output):
             print(line)
+@app.route("/game/<game_id>/trade", methods=["GET", "POST"])
+def trade(game_id):
+    if request.method == "POST":
+        trade = request.get_json()
+        print("$")
+        print(trade)
+        print("$")
+        name1 = trade[0]['player_name']
+        money1 = trade[0]['money']
+        tile_id1 = trade[0]['tile_id']
+
+        name2 = trade[1]['player_name']
+        money2 = trade[1]['money']
+        tile_id2 = trade[1]['tile_id']
+
+        p1 = Player.query.filter_by(name=name1).first()
+        p2 = Player.query.filter_by(name=name2).first()
+
+        p1.money -= int(money1)
+        p2.money -= int(money2)
+        p1.money += int(money2)
+        p2.money += int(money1)
+
+        if tile_id1 != -1:
+            tile_to_change = Tile.query.filter_by(tile_id=tile_id1)
+            tile_to_change.player_id = p2.player_id
+        if tile_id2 != -1:
+            tile_to_change = Tile.query.filter_by(tile_id=tile_id2)
+            tile_to_change.player_id = p1.player_id
+
+        db.session.commit()
+
+        return "", 201
+
+    return "",200
