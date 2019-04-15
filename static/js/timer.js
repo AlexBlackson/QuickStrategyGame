@@ -39,7 +39,7 @@ var player;;
     var money_totals = localStorage.getItem('money_totals');
     var luck_totals = localStorage.getItem('luck_totals');
 
-    
+
 
     if(timeLeft == 10)
     {
@@ -59,9 +59,9 @@ var player;;
         }
         xhr1.send();
         document.getElementById("turnLabel").innerHTML = "Turn: " + players[turn_int];
-    }   
+    }
 
-    
+
     document.getElementById("countdown").innerHTML = timeLeft + " seconds";
     timeLeft -= 1;
 
@@ -85,12 +85,12 @@ var player;;
         xhttp2.send(JSON.stringify(player, null, 1));
 
         xhttp.open('PUT', '../../api/gameboard/1');
-                        
-        console.log(load_gb.tiles);
-    
+
+        // console.log(load_gb.tiles);
+
         xhttp.setRequestHeader('Content-Type', 'application/json');
         xhttp.onreadystatechange = function(){
-            console.log(xhttp.responseText);
+            // console.log(xhttp.responseText);
         }
         xhttp.send(JSON.stringify(load_gb));
 
