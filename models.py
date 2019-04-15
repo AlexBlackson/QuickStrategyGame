@@ -26,9 +26,8 @@ class Player(db.Model):
     player_id = db.Column(db.Integer, primary_key=True)
     user = db.relationship('User', backref='player', lazy=False, uselist=False)
     name = db.Column(db.String(80), unique=False)
-    resources = db.Column(db.String, unique=False)
+    resources = db.Column(db.Float, unique=False)
     money = db.Column(db.Float, unique=False)
-    tiles = db.relationship('Tile', backref='player', lazy=False)
     game_id = db.Column(db.Integer, db.ForeignKey(
         'game.game_id'), nullable=True)
 
@@ -39,14 +38,16 @@ class Player(db.Model):
 
 class Game(db.Model):
     game_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, unique=True)
     players = db.relationship('Player', backref='game', lazy=False)
     gameboard = db.relationship(
         'Gameboard', backref='game', lazy=False, uselist=False)
     gameOver = db.Column(db.Boolean, unique=False)
     turn = db.relationship('Turn', backref='game', lazy=False, uselist=False)
 
-    def __init__(self, turn, gameboard=None):
+    def __init__(self, name, turn, gameboard=None):
         self.gameOver = False
+        self.name = name
         self.turn = turn
         if gameboard != None:
             self.gameboard = gameboard
@@ -67,14 +68,16 @@ class Tile(db.Model):
     col = db.Column(db.Integer, unique=False)
     # mutable
     territoryName = db.Column(db.String(80), nullable=False, unique=False)
-    multiplier = db.Column(db.String(80), unique=False)
+    income = db.Column(db.Integer, unique=False)
+    luck = db.Column(db.Integer, unique=False)
     player_id = db.Column(db.Integer, db.ForeignKey(
         'player.player_id'), nullable=True)
     unit_count = db.Column(db.Integer, unique=False)
 
-    def __init__(self, player, gameboard, row, col, territoryName, multiplier, unit_count):
+    def __init__(self, player, gameboard, row, col, territoryName, luck, income, unit_count):
         self.territoryName = territoryName
-        self.multiplier = multiplier
+        self.income = income
+        self.luck = luck
         if player != None:
             self.player_id = player.player_id
         else:

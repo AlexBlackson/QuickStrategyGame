@@ -5,7 +5,8 @@ import random
 import math
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
 from flask_restless import APIManager
-from Models import *
+from models import *
+
 
 # create our yuge application
 app = Flask(__name__)
@@ -116,6 +117,16 @@ def map(game_id):
     print(game.game_id)
     return render_template("map.html", game=game)
 
+@app.route("/lobby", methods = ["GET","POST"])
+def lobby():
+	if request.method == "POST":
+		newGame = Game(request.form["gameName"], Turn(), Gameboard())
+		db.session.add(newGame)
+
+		db.session.commit()
+
+	return render_template("lobby.html", username=session["username"], games=Game.query.all(), invalid=False)
+
 
 def isUsernameUnique(name):
     if User.query.filter_by(username=name).first():
@@ -135,6 +146,8 @@ def createUsers():
 
 def createPlayer(user, game):
     p = Player(User.query.filter_by(user_id=user.user_id).first())
+    p.money = 0.0
+    p.resources = 0.0
     db.session.add(p)
     db.session.commit()
     game.players.append(p)
@@ -143,7 +156,7 @@ def createPlayer(user, game):
 def createGame(players):
     turn = Turn()
     db.session.add(turn)
-    g = Game(turn, Gameboard())
+    g = Game("test", turn, Gameboard())
     for p in players:
         createPlayer(p, g)
     order = [p.player_id for p in g.players]
@@ -165,7 +178,7 @@ def createGameBoard():
         arr = []
         for j in range(0, 9):
             t = Tile(players[random.randint(0, 2)], gameboard,
-                     i, j, 'Grass', json.dumps([.25, .5, .75]), 0)
+                     i, j, 'Grass', .25, .5, random.randint(0,6))
             db.session.add(t)
             arr.append(t)
         board.append(arr)
@@ -204,7 +217,8 @@ def tile_post_test(game_id, tile_id, tile):
     print(tile)
     db_tile = Tile.query.filter_by(tile_id=tile_id).first()
     db_tile.territoryName = tile['territoryName']
-    db_tile.multiplier = tile['multiplier']
+    db_tile.luck = tile['luck']
+    db_tile.income = tile['income']
     db_tile.player_id = tile['player_id']
     db_tile.unit_count = tile['unit_count']
 
@@ -234,6 +248,7 @@ def turn(game_id):
         turn.order_idx = next_idx
         if next_idx == 0:
             turn.round += 1
+
         db.session.commit()
         return json.dumps(TurnSchema().dump(turn).data), 201
     elif request.method == "GET":
@@ -241,8 +256,8 @@ def turn(game_id):
 
 @app.route("/<game_id>/gameboard", methods=["GET"])
 def gameboard(game_id):
+
     if request.method == "GET":
-        print("GET")
         # Create gameboard JSON Object
         game = Game.query.filter_by(game_id=game_id).first()
         tiles = game.gameboard.tiles
