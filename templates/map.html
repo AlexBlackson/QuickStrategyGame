@@ -1,5 +1,6 @@
     <head>
-        <title>QSG</title>
+        <title>Quick Strategy Game</title>
+        <link  href= "{{ url_for('static', filename='css/base.css') }}" rel="stylesheet" type="text/css">
         <link  href= "{{ url_for('static', filename='css/hex.css') }}" rel="stylesheet" type="text/css">
         <link  href= "{{ url_for('static', filename='css/map.css') }}" rel="stylesheet" type="text/css">
         <link  href= "{{ url_for('static', filename='css/trade.css') }}" rel="stylesheet" type="text/css">
@@ -10,6 +11,23 @@
         <script src="{{ url_for('static', filename='js/trading.js') }}" type = "text/javascript"></script>
         <script src="{{ url_for('static', filename='js/map.js') }}" type = "text/javascript"></script>
         <script src="{{ url_for('static', filename='js/timer.js') }}" type = "text/javascript"></script>
+        <style>
+            body{
+                background-color:  #8CDFC2;
+                font-family: 'Trebuchet MS', sans-serif;
+                color: white;
+            } 
+            h1{
+                margin: auto;
+                display: inline-block;
+                background-color: #7A9D96;
+                padding: 8px;
+            }
+            h1.qsg{
+                text-align: center;
+                background-color: #7A9D96;
+            }       
+        </style>
     </head>
     <script>
     console.log('{{game.game_id}}')
@@ -20,7 +38,7 @@
     x = '{{ session["username"] }}';
     localStorage.setItem('usrname', '{{ session["username"] }}')
     </script>
-    <body>
+    <body >
 
         <!-- <style>
             h1 {background-color: gray}
@@ -29,7 +47,9 @@
 
 
         {%block body%}
-
+        <h1 class="qsg">Quick Strategy Game</h1>
+        <br/>
+        <br/>
 
         <h1 class="text-center" id="stats_display">Money: 0; Territories: 0 <button class="btn btn-primary  btn-inline" onclick="trade({{game.game_id}})">Trade</button></h1>
         <div id="countdown"></div>

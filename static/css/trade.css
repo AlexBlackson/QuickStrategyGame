@@ -32,6 +32,9 @@ body {
     position: relative; /* needed for the overlay to extend when you scroll */
     /* general styles */
     padding: 30px;
+    background-color: #07889B;
+    color: white;
+    font-family: 'Trebuchet MS', sans-serif;
 }
 .overlay_container{
 

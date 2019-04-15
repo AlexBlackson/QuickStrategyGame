@@ -2,8 +2,8 @@
     position: relative;
     width: 100px; 
     height: 57.74px;
-    background-color: red;
-	background-image: url("https://cdn0.iconfinder.com/data/icons/the-middle-ages/500/Knight_knight_helmet-512.png");
+    background-color: #e62739;
+	background-image: url("http://oi67.tinypic.com/2m2xnog.jpg");
     background-size: 25px;
 	background-position: center;
 	background-repeat: no-repeat;
@@ -22,21 +22,21 @@
   
   .hexagon1:before {
     bottom: 100%;
-    border-bottom: 28.87px solid red;
+    border-bottom: 28.87px solid #e62739;
   }
   
   .hexagon1:after {
     top: 100%;
     width: 0;
-    border-top: 28.87px solid red;
+    border-top: 28.87px solid #e62739;
   }
    
   .hexagon2 {
     position: relative;
     width: 100px; 
     height: 57.74px;
-    background-color: blue;
-	background-image: url("https://cdn0.iconfinder.com/data/icons/the-middle-ages/500/Knight_knight_helmet-512.png");
+    background-color: #00303F;
+	background-image: url("http://oi67.tinypic.com/2m2xnog.jpg");
     background-size: 25px;
 	background-position: center;
 	background-repeat: no-repeat;
@@ -55,21 +55,21 @@
   
   .hexagon2:before {
     bottom: 100%;
-    border-bottom: 28.87px solid blue;
+    border-bottom: 28.87px solid #00303F;
   }
   
   .hexagon2:after {
     top: 100%;
     width: 0;
-    border-top: 28.87px solid blue;
+    border-top: 28.87px solid #00303F;
   }
 
   .hexagon3 {
     position: relative;
     width: 100px; 
     height: 57.74px;
-    background-color: yellow;
-	background-image: url("https://cdn0.iconfinder.com/data/icons/the-middle-ages/500/Knight_knight_helmet-512.png");
+    background-color: #DCAE1D;
+	background-image: url("http://oi67.tinypic.com/2m2xnog.jpg");
     background-size: 25px;
 	background-position: center;
 	background-repeat: no-repeat;
@@ -88,21 +88,21 @@
   
   .hexagon3:before {
     bottom: 100%;
-    border-bottom: 28.87px solid yellow;
+    border-bottom: 28.87px solid #DCAE1D;
   }
   
   .hexagon3:after {
     top: 100%;
     width: 0;
-    border-top: 28.87px solid yellow;
+    border-top: 28.87px solid #DCAE1D;
   }
 
   .hexagon4 {
     position: relative;
     width: 100px; 
     height: 57.74px;
-    background-color: green;
-	background-image: url("https://cdn0.iconfinder.com/data/icons/the-middle-ages/500/Knight_knight_helmet-512.png");
+    background-color: #28794B;
+	background-image: url("http://oi67.tinypic.com/2m2xnog.jpg");
     background-size: 25px;
 	background-position: center;
 	background-repeat: no-repeat;
@@ -121,21 +121,21 @@
   
   .hexagon4:before {
     bottom: 100%;
-    border-bottom: 28.87px solid green;
+    border-bottom: 28.87px solid #28794B;
   }
   
   .hexagon4:after {
     top: 100%;
     width: 0;
-    border-top: 28.87px solid green;
+    border-top: 28.87px solid #28794B;
   }
 
   .hexagon5 {
     position: relative;
     width: 100px; 
     height: 57.74px;
-    background-color: orange;
-	background-image: url("https://cdn0.iconfinder.com/data/icons/the-middle-ages/500/Knight_knight_helmet-512.png");
+    background-color: #FF4900;
+	background-image: url("http://oi67.tinypic.com/2m2xnog.jpg");
     background-size: 25px;
 	background-position: center;
 	background-repeat: no-repeat;
@@ -154,21 +154,21 @@
   
   .hexagon5:before {
     bottom: 100%;
-    border-bottom: 28.87px solid orange;
+    border-bottom: 28.87px solid #FF4900;
   }
   
   .hexagon5:after {
     top: 100%;
     width: 0;
-    border-top: 28.87px solid orange;
+    border-top: 28.87px solid #FF4900;
   }
 
   .hexagon6 {
     position: relative;
     width: 100px; 
     height: 57.74px;
-    background-color: purple;
-	  background-image: url("https://cdn0.iconfinder.com/data/icons/the-middle-ages/500/Knight_knight_helmet-512.png");
+    background-color: #560864;
+	  background-image: url("http://oi67.tinypic.com/2m2xnog.jpg");
     background-size: 25px;
 	  background-position: center;
 	  background-repeat: no-repeat;
@@ -187,13 +187,13 @@
   
   .hexagon6:before {
     bottom: 100%;
-    border-bottom: 28.87px solid purple;
+    border-bottom: 28.87px solid #560864;
   }
   
   .hexagon6:after {
     top: 100%;
     width: 0;
-    border-top: 28.87px solid purple;
+    border-top: 28.87px solid #560864;
   }
 
   .hexagon7 {
@@ -229,7 +229,7 @@
     width: 100px; 
     height: 57.74px;
     background-color: #f265da;
-    background-image: url("https://cdn0.iconfinder.com/data/icons/the-middle-ages/500/Knight_knight_helmet-512.png");
+    background-image: url("http://oi67.tinypic.com/2m2xnog.jpg");
     background-size: 25px;
 	  background-position: center;
 	  background-repeat: no-repeat;
