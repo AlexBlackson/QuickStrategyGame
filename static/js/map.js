@@ -21,6 +21,13 @@ var add_troops = false;
 var old_y;
 var old_x;
 
+var player1_count = 0;
+var player2_count = 0;
+var player3_count = 0;
+var player4_count = 0;
+var player5_count = 0;
+var player6_count = 0;
+
 function assign_game(g, player){
     game = g;
 }
@@ -296,32 +303,37 @@ function getGameBoard()
                         {
                             document.getElementById(i + "" + j).setAttribute('class', 'hexagon1');
                             document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-
+                            player1_count++;
                         }
                         else if(myGameBoard[i][j].player_id == "2")
                         {
                             document.getElementById(i + "" + j).setAttribute('class', 'hexagon2');
                             document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
+                            player2_count++;
                         }
                         else if(myGameBoard[i][j].player_id == "3")
                         {
                             document.getElementById(i + "" + j).setAttribute('class', 'hexagon3');
                             document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
+                            player3_count++;
                         }
                         else if(myGameBoard[i][j].player_id == "4")
                         {
                             document.getElementById(i + "" + j).setAttribute('class', 'hexagon4');
                             document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
+                            player4_count++;
                         }
                         else if(myGameBoard[i][j].player_id == "5")
                         {
                             document.getElementById(i + "" + j).setAttribute('class', 'hexagon5');
                             document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
+                            player5_count++;
                         }
                         else if(myGameBoard[i][j].player_id == "6")
                         {
                             document.getElementById(i + "" + j).setAttribute('class', 'hexagon6');
                             document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
+                            player6_count++;
                         }
                     }
                 }
@@ -355,31 +367,37 @@ function getGameBoard()
                     {
                         document.getElementById(i + "" + j).setAttribute('class', 'hexagon1');
                         document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
+                        player1_count++;
                     }
                     else if(myGameBoard[i][j].player_id == "2")
                     {
                         document.getElementById(i + "" + j).setAttribute('class', 'hexagon2');
                         document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
+                        player2_count++;
                     }
                     else if(myGameBoard[i][j].player_id == "3")
                     {
                         document.getElementById(i + "" + j).setAttribute('class', 'hexagon3');
                         document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
+                        player3_count++;
                     }
                     else if(myGameBoard[i][j].player_id == "4")
                     {
                         document.getElementById(i + "" + j).setAttribute('class', 'hexagon4');
                         document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
+                        player4_count++;
                     }
                     else if(myGameBoard[i][j].player_id == "5")
                     {
                         document.getElementById(i + "" + j).setAttribute('class', 'hexagon5');
                         document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
+                        player5_count++;
                     }
                     else if(myGameBoard[i][j].player_id == "6")
                     {
                         document.getElementById(i + "" + j).setAttribute('class', 'hexagon6');
                         document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
+                        player6_count++;
                     }
                 }
             }
@@ -392,6 +410,31 @@ function getGameBoard()
                 right--;
             }
                 left_decrease= !left_decrease;
+        }
+
+        if(player1_count == 61)
+        {
+            document.getElementById("stats_display").innerHTML = "Player 1 Wins";
+        }
+        else if(player2_count == 61)
+        {
+            document.getElementById("stats_display").innerHTML = "Player 2 Wins";
+        }
+        else if(player3_count == 61)
+        {
+            document.getElementById("stats_display").innerHTML = "Player 3 Wins";
+        }
+        else if(player4_count == 61)
+        {
+            document.getElementById("stats_display").innerHTML = "Player 4 Wins";
+        }
+        else if(player5_count == 61)
+        {
+            document.getElementById("stats_display").innerHTML = "Player 5 Wins";
+        }
+        else if(player6_count == 61)
+        {
+            document.getElementById("stats_display").innerHTML = "Player 6 Wins";
         }
 
         luck_totals = temp_luck_totals;
