@@ -73,6 +73,44 @@ def users(username):
         else:
             return render_template("profile.html", username=username)
 
+@app.route("/win/", methods=["GET", "POST"])
+def win():
+    if request.method == "POST":
+
+        win = request.get_json()
+        winner = win['username']
+        if winner == "p1":
+            loser1 = "p2"
+            loser2 = "p3"
+        elif winner == "p2":
+            loser1 = "p1"
+            loser2 = "p3"
+        elif winner == "p3":
+            loser1 = "p1"
+            loser2 = "p2"
+        else:
+            return
+
+        winningUser = User.query.filter_by(username=winner).first()
+        losingUser1 = User.query.filter_by(username=loser1).first() 
+        losingUser2 = User.query.filter_by(username=loser2).first()  
+
+        winningUser.win()
+        losingUser1.lose()
+        losingUser2.lose()
+
+        print("win called!!!!")
+        print(winningUser.wins + " " + winningUser.losses)
+        print(losingUser1.wins + " " + losingUser1.losses)
+        print(losingUser2.wins + " " + losingUser2.losses)
+
+        db.session.commit()
+
+        return "", 201
+
+    if request.method == "GET":
+        return "", 201
+
 
 @app.route("/register/", methods=["GET", "POST"])
 def register():
@@ -117,7 +155,7 @@ def map(game_id):
     print(game.game_id)
     return render_template("map.html", game=game)
 
-@app.route("/lobby", methods = ["GET","POST"])
+@app.route("/lobby/", methods = ["GET","POST"])
 def lobby():
 	if request.method == "POST":
 		newGame = Game(request.form["gameName"], Turn(), Gameboard())
@@ -177,8 +215,10 @@ def createGameBoard():
     for i in range(0, 9):
         arr = []
         for j in range(0, 9):
-            t = Tile(players[random.randint(0, 2)], gameboard,
+            t = Tile(players[0], gameboard,
                      i, j, 'Grass', .25, .5, random.randint(0,6))
+            #t = Tile(players[random.randint(0, 2)], gameboard,
+            #         i, j, 'Grass', .25, .5, random.randint(0,6))
             db.session.add(t)
             arr.append(t)
         board.append(arr)
@@ -266,6 +306,43 @@ def gameboard(game_id):
             tile_matrix[t.row][t.col] = t.as_dict()
         return json.dumps(tile_matrix), 200
 
+# @app.route("/<game_id>/win", methods=["GET","POST"])
+# def win():
+#     if request.method == "POST":
+#         win = request.get_json()
+#         winner = win['username']
+#         if winner == "p1":
+#             loser1 = "p2"
+#             loser2 = "p3"
+#         elif winner == "p2":
+#             loser1 = "p1"
+#             loser2 = "p3"
+#         elif winner == "p3":
+#             loser1 = "p1"
+#             loser2 = "p2"
+#         else:
+#             return
+
+#         winningUser = User.query.filter_by(username=winner).first()
+#         losingUser1 = User.query.filter_by(username=loser1).first() 
+#         losingUser2 = User.query.filter_by(username=loser2).first()  
+
+#         winningUser.win()
+#         losingUser1.lose()
+#         losingUser2.lose()
+
+#         print("win called!!!!")
+#         print(winningUser.wins + " " + winningUser.losses)
+#         print(losingUser1.wins + " " + losingUser1.losses)
+#         print(losingUser2.wins + " " + losingUser2.losses)
+
+#         db.session.commit()
+
+#         return "", 201
+
+#     if request.method == "GET":
+#         return "", 201
+
 @app.route("/testing/", methods=["GET", "POST"])
 def testing():
     return render_template("posttest.html")
@@ -289,6 +366,7 @@ def list_routes():
 
         for line in sorted(output):
             print(line)
+
 @app.route("/game/<game_id>/trade", methods=["GET", "POST"])
 def trade(game_id):
     if request.method == "POST":
@@ -324,3 +402,4 @@ def trade(game_id):
         return "", 201
 
     return "",200
+db.session.commit()

@@ -13,10 +13,20 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True)
     password = db.Column(db.String(80), unique=False)
     player_id = db.Column(db.Integer, db.ForeignKey('player.player_id'))
+    wins = db.Column(db.Integer, unique=False)
+    losses = db.Column(db.Integer, unique=False)
 
     def __init__(self, username, password):
         self.username = username
         self.password = password
+        self.wins = 0
+        self.losses = 0
+
+    def win():
+        self.wins = self.wins + 1
+
+    def loss():
+        self.losses = self.losses + 1
 
     # def get(self, user_id):
     #    return UserSchema(many=True).dump(self)
