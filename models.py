@@ -44,6 +44,7 @@ class Player(db.Model):
     def __init__(self, user):
         self.user = user
         self.name = user.username
+        self.money = 100
 
 
 class Game(db.Model):
