@@ -21,14 +21,7 @@ var add_troops = false;
 var old_y;
 var old_x;
 
-var player1_count = 0;
-var player2_count = 0;
-var player3_count = 0;
-var player4_count = 0;
-var player5_count = 0;
-var player6_count = 0;
-
-function assign_game(g, player){
+function assign_game(g, player) {
     game = g;
 }
 
@@ -263,37 +256,22 @@ function getGameBoard() {
                         if (myGameBoard[i][j].player_id == "1") {
                             document.getElementById(i + "" + j).setAttribute('class', 'hexagon1');
                             document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-                            player1_count++;
-                        }
-                        else if(myGameBoard[i][j].player_id == "2")
-                        {
+
+                        } else if (myGameBoard[i][j].player_id == "2") {
                             document.getElementById(i + "" + j).setAttribute('class', 'hexagon2');
                             document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-                            player2_count++;
-                        }
-                        else if(myGameBoard[i][j].player_id == "3")
-                        {
+                        } else if (myGameBoard[i][j].player_id == "3") {
                             document.getElementById(i + "" + j).setAttribute('class', 'hexagon3');
                             document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-                            player3_count++;
-                        }
-                        else if(myGameBoard[i][j].player_id == "4")
-                        {
+                        } else if (myGameBoard[i][j].player_id == "4") {
                             document.getElementById(i + "" + j).setAttribute('class', 'hexagon4');
                             document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-                            player4_count++;
-                        }
-                        else if(myGameBoard[i][j].player_id == "5")
-                        {
+                        } else if (myGameBoard[i][j].player_id == "5") {
                             document.getElementById(i + "" + j).setAttribute('class', 'hexagon5');
                             document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-                            player5_count++;
-                        }
-                        else if(myGameBoard[i][j].player_id == "6")
-                        {
+                        } else if (myGameBoard[i][j].player_id == "6") {
                             document.getElementById(i + "" + j).setAttribute('class', 'hexagon6');
                             document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-                            player6_count++;
                         }
                     }
                 }
@@ -307,55 +285,36 @@ function getGameBoard() {
             }
 
 
-        left = 0;
-        right = 8
-        var left_decrease = true;
+            left = 0;
+            right = 8
+            var left_decrease = true;
 
-        for (i = 5; i < 9; i++)
-        {
-            for(j = left; j < right; j++)
-            {
-                var pid = parseInt(myGameBoard[i][j].player_id);
-                temp_money_totals[pid-1] += parseFloat(myGameBoard[i][j].income);
-                temp_luck_totals[pid-1] += parseFloat(myGameBoard[i][j].luck);
+            for (i = 5; i < 9; i++) {
+                for (j = left; j < right; j++) {
+                    var pid = parseInt(myGameBoard[i][j].player_id);
+                    temp_money_totals[pid - 1] += parseFloat(myGameBoard[i][j].income);
+                    temp_luck_totals[pid - 1] += parseFloat(myGameBoard[i][j].luck);
 
-                if(!(document.getElementById(i + "" + j).getAttribute('class') == 'hexagon8'))
-                {
-                    if(myGameBoard[i][j].player_id == "1")
-                    {
-                        document.getElementById(i + "" + j).setAttribute('class', 'hexagon1');
-                        document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-                        player1_count++;
-                    }
-                    else if(myGameBoard[i][j].player_id == "2")
-                    {
-                        document.getElementById(i + "" + j).setAttribute('class', 'hexagon2');
-                        document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-                        player2_count++;
-                    }
-                    else if(myGameBoard[i][j].player_id == "3")
-                    {
-                        document.getElementById(i + "" + j).setAttribute('class', 'hexagon3');
-                        document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-                        player3_count++;
-                    }
-                    else if(myGameBoard[i][j].player_id == "4")
-                    {
-                        document.getElementById(i + "" + j).setAttribute('class', 'hexagon4');
-                        document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-                        player4_count++;
-                    }
-                    else if(myGameBoard[i][j].player_id == "5")
-                    {
-                        document.getElementById(i + "" + j).setAttribute('class', 'hexagon5');
-                        document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-                        player5_count++;
-                    }
-                    else if(myGameBoard[i][j].player_id == "6")
-                    {
-                        document.getElementById(i + "" + j).setAttribute('class', 'hexagon6');
-                        document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-                        player6_count++;
+                    if (!(document.getElementById(i + "" + j).getAttribute('class') == 'hexagon8')) {
+                        if (myGameBoard[i][j].player_id == "1") {
+                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon1');
+                            document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
+                        } else if (myGameBoard[i][j].player_id == "2") {
+                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon2');
+                            document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
+                        } else if (myGameBoard[i][j].player_id == "3") {
+                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon3');
+                            document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
+                        } else if (myGameBoard[i][j].player_id == "4") {
+                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon4');
+                            document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
+                        } else if (myGameBoard[i][j].player_id == "5") {
+                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon5');
+                            document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
+                        } else if (myGameBoard[i][j].player_id == "6") {
+                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon6');
+                            document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
+                        }
                     }
                 }
                 if (left_decrease) {
@@ -366,37 +325,11 @@ function getGameBoard() {
                 left_decrease = !left_decrease;
             }
 
-        if(player1_count == 61)
-        {
-            document.getElementById("stats_display").innerHTML = "Player 1 Wins";
-        }
-        else if(player2_count == 61)
-        {
-            document.getElementById("stats_display").innerHTML = "Player 2 Wins";
-        }
-        else if(player3_count == 61)
-        {
-            document.getElementById("stats_display").innerHTML = "Player 3 Wins";
-        }
-        else if(player4_count == 61)
-        {
-            document.getElementById("stats_display").innerHTML = "Player 4 Wins";
-        }
-        else if(player5_count == 61)
-        {
-            document.getElementById("stats_display").innerHTML = "Player 5 Wins";
-        }
-        else if(player6_count == 61)
-        {
-            document.getElementById("stats_display").innerHTML = "Player 6 Wins";
-        }
-
-        luck_totals = temp_luck_totals;
-        money_totals = temp_money_totals;
-        localStorage.setItem('money_totals', money_totals);
-        localStorage.setItem('luck_totals', luck_totals);
-    }
-        else {
+            luck_totals = temp_luck_totals;
+            money_totals = temp_money_totals;
+            localStorage.setItem('money_totals', money_totals);
+            localStorage.setItem('luck_totals', luck_totals);
+        } else {
             console.log('Request failed. Returned status of ' + xhr.responseText);
         }
     }
