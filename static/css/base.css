@@ -14,3 +14,25 @@ h1.qsg{
 	padding: 8px;
 	background-color: #027585;
 }
+
+h1.lobby{
+	padding: 4px;
+	background-color: #027585;
+}
+table {
+  border-collapse: collapse;
+  width: 60%;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #8EB7DC}
+tr:nth-child(odd){background-color: #565F67}
+
+th {
+  background-color: #027585;
+  color: white;
+}

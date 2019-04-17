@@ -13,10 +13,24 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True)
     password = db.Column(db.String(80), unique=False)
     player_id = db.Column(db.Integer, db.ForeignKey('player.player_id'))
+    wins = db.Column(db.Integer, unique=False)
+    losses = db.Column(db.Integer, unique=False)
+    win_percent = db.Column(db.Integer, unique=False)
 
     def __init__(self, username, password):
         self.username = username
         self.password = password
+        self.wins = 0
+        self.losses = 0
+        self.win_percent = 0
+
+    def win(self):
+        self.wins = self.wins + 1
+        self.win_percent = float(self.wins) / float(self.wins + self.losses) * 100
+
+    def loss(self):
+        self.losses = self.losses + 1
+        self.win_percent = float(self.wins) / float(self.wins + self.losses) * 100
 
     # def get(self, user_id):
     #    return UserSchema(many=True).dump(self)

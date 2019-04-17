@@ -37,6 +37,8 @@ apimanager.create_api(Tile, methods=['GET', 'POST', 'PUT' 'DELETE'])
 apimanager.create_api(Turn, methods=['GET', 'POST', 'PUT' 'DELETE'])
 
 trades = []
+doneGames = []
+instantWin = True
 
 
 @app.route("/routes")
@@ -76,6 +78,54 @@ def users(username):
             abort(401)
         else:
             return render_template("profile.html", username=username)
+
+@app.route("/win/<game_id>/<player_username>", methods=["GET", "POST"])
+def win(game_id, player_username):
+    if request.method == "POST":
+        if game_id not in doneGames:
+            print("win called!!!!")
+            currGame = Game.query.filter_by(game_id=game_id).first()
+            players = currGame.players
+            winner = player_username
+
+            for p in players:
+                if p.user.username == winner:
+                    winningUser = User.query.filter_by(username=p.user.username).first().win()
+                    #print(winningUser.wins)
+                else:
+                    losingUser = User.query.filter_by(username=p.user.username).first().loss()
+                    #print(losingUser.wins)
+            # if winner == "p1":
+            #     loser1 = "p2"
+            #     loser2 = "p3"
+            # elif winner == "p2":
+            #     loser1 = "p1"
+            #     loser2 = "p3"
+            # elif winner == "p3":
+            #     loser1 = "p1"
+            #     loser2 = "p2"
+            # else:
+            #     return
+
+            # losingUser1 = User.query.filter_by(username=loser1).first() 
+            # losingUser2 = User.query.filter_by(username=loser2).first()  
+
+            # winningUser.win()
+            # losingUser1.loss()
+            # losingUser2.loss()
+
+            # print("win called!!!!")
+            # print(winningUser.wins)
+            # print(losingUser1.wins)
+            # print(losingUser2.wins)
+            doneGames.append(game_id)
+
+            db.session.commit()
+
+        return "", 201
+
+    if request.method == "GET":
+        return "", 201
 
 
 @app.route("/register/", methods=["GET", "POST"])
@@ -121,8 +171,7 @@ def map(game_id):
     print(game.game_id)
     return render_template("map.html", game=game)
 
-
-@app.route("/lobby", methods=["GET", "POST"])
+@app.route("/lobby/", methods = ["GET","POST"])
 def lobby():
     if request.method == "POST":
         newGame = Game(request.form["gameName"], Turn(), Gameboard())
@@ -131,6 +180,10 @@ def lobby():
         db.session.commit()
 
     return render_template("lobby.html", username=session["username"], games=Game.query.all(), invalid=False)
+
+@app.route("/leaderboard/", methods= ["GET"])
+def leaderboard():
+    return render_template("leaderboard.html", username=session["username"], players=User.query.order_by(User.win_percent.desc()).all(), invalid=False)
 
 
 def isUsernameUnique(name):
@@ -182,8 +235,12 @@ def createGameBoard():
     for i in range(0, 9):
         arr = []
         for j in range(0, 9):
-            t = Tile(players[random.randint(0, 2)], gameboard,
-                     i, j, 'Grass', .25, .5, random.randint(0, 6))
+            if instantWin == True:
+                t = Tile(players[random.randint(0, 1)], gameboard,
+                         i, j, 'Grass', .25, .5, random.randint(0,6))
+            else:
+                t = Tile(players[random.randint(0, 2)], gameboard,
+                         i, j, 'Grass', .25, .5, random.randint(0,6))
             db.session.add(t)
             arr.append(t)
         board.append(arr)
@@ -272,6 +329,43 @@ def gameboard(game_id):
         for t in tiles:
             tile_matrix[t.row][t.col] = t.as_dict()
         return json.dumps(tile_matrix), 200
+
+# @app.route("/<game_id>/win", methods=["GET","POST"])
+# def win():
+#     if request.method == "POST":
+#         win = request.get_json()
+#         winner = win['username']
+#         if winner == "p1":
+#             loser1 = "p2"
+#             loser2 = "p3"
+#         elif winner == "p2":
+#             loser1 = "p1"
+#             loser2 = "p3"
+#         elif winner == "p3":
+#             loser1 = "p1"
+#             loser2 = "p2"
+#         else:
+#             return
+
+#         winningUser = User.query.filter_by(username=winner).first()
+#         losingUser1 = User.query.filter_by(username=loser1).first() 
+#         losingUser2 = User.query.filter_by(username=loser2).first()  
+
+#         winningUser.win()
+#         losingUser1.lose()
+#         losingUser2.lose()
+
+#         print("win called!!!!")
+#         print(winningUser.wins + " " + winningUser.losses)
+#         print(losingUser1.wins + " " + losingUser1.losses)
+#         print(losingUser2.wins + " " + losingUser2.losses)
+
+#         db.session.commit()
+
+#         return "", 201
+
+#     if request.method == "GET":
+#         return "", 201
 
 
 @app.route("/testing/", methods=["GET", "POST"])

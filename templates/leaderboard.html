@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block body %}
+	<a href= "{{ url_for("lobby") }}">Lobby</a>
+	<br/><br/>
+	<h1 class="lobby"> Current Standings: </h1>
+	<br/>
+	<br/>
+	<br/>
+	{% if players %}
+	<table>
+		<tr>
+			<th>Username</th>
+			<th>Wins</th>
+			<th>Losses</th>
+			<th>Win Percentage</th>
+		</tr>
+		{% for p in players %}
+		<tr>
+			<td>{{ p.username }}</td>
+			<td>{{ p.wins }}</td>
+			<td>{{ p.losses }}</td>
+			<td>{{ p.win_percent }}%</td>
+		</tr>
+		{% endfor %}
+	</table>
+	{% else %}
+	<h2>Currently, there are no registered players!</h2>
+	{% endif %}
+
+{% endblock %}
