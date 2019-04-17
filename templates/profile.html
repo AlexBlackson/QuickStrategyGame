@@ -3,6 +3,7 @@
 {% block title %}Login Page - {{ super() }}{% endblock %}
 
 {% block body %}
+	<a href= "{{ url_for("leaderboard") }}">Leaderboard</a><br/><br/>
     <h1> Welcome {{username}}! </h1>
     <h2> Click <a href = "{{ url_for("lobby") }}">here</a> to navigate to lobby</h2> 
 {% endblock %}

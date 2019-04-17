@@ -423,9 +423,8 @@ function getGameBoard()
             game_done = true;
             console.log("winner achieved!")
             var win_xhr = new XMLHttpRequest();
-            var win_req;
-            win_req = "username=p" + toString(winner)
-            win_xhr.open('POST', '../../api/win/1');
+            var win_req = "p" + winner.toString()
+            win_xhr.open('POST', '/win/1/'+win_req);
             win_xhr.setRequestHeader('Content-Type', 'application/json');
             win_xhr.onreadystatechange = function(){
                 console.log(win_xhr.responseText);
