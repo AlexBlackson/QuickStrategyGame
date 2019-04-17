@@ -38,7 +38,7 @@ apimanager.create_api(Turn, methods=['GET', 'POST', 'PUT' 'DELETE'])
 
 trades = []
 doneGames = []
-instantWin = True
+instantWin = False
 
 
 @app.route("/routes")
