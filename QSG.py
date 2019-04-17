@@ -19,7 +19,7 @@ app.config.update(dict(
     SQLALCHEMY_TRACK_MODIFICATIONS=False,
     SQLALCHEMY_DATABASE_URI='sqlite:///' +
     os.path.join(app.root_path, 'game.db'),
-    TEMPLATES_AUTO_RELOAD = True
+    TEMPLATES_AUTO_RELOAD=True
 ))
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 app.secret_key = "trashSecurity"
@@ -35,6 +35,8 @@ apimanager.create_api(Game, methods=['GET', 'POST', 'PUT' 'DELETE'])
 apimanager.create_api(Gameboard, methods=['GET', 'POST', 'PUT', 'DELETE'])
 apimanager.create_api(Tile, methods=['GET', 'POST', 'PUT' 'DELETE'])
 apimanager.create_api(Turn, methods=['GET', 'POST', 'PUT' 'DELETE'])
+
+trades = []
 
 
 @app.route("/routes")
@@ -54,9 +56,11 @@ def initdb_command():
     createGameBoard()
     usrs = User.query.all()
 
+
 @app.route("/trading_tests")
 def trading_tests():
     return render_template("trading.html.j2")
+
 
 def isUsernameUnique(username):
     users = User.query.order_by(User.user_id.desc()).all()
@@ -117,15 +121,16 @@ def map(game_id):
     print(game.game_id)
     return render_template("map.html", game=game)
 
-@app.route("/lobby", methods = ["GET","POST"])
+
+@app.route("/lobby", methods=["GET", "POST"])
 def lobby():
-	if request.method == "POST":
-		newGame = Game(request.form["gameName"], Turn(), Gameboard())
-		db.session.add(newGame)
+    if request.method == "POST":
+        newGame = Game(request.form["gameName"], Turn(), Gameboard())
+        db.session.add(newGame)
 
-		db.session.commit()
+        db.session.commit()
 
-	return render_template("lobby.html", username=session["username"], games=Game.query.all(), invalid=False)
+    return render_template("lobby.html", username=session["username"], games=Game.query.all(), invalid=False)
 
 
 def isUsernameUnique(name):
@@ -178,7 +183,7 @@ def createGameBoard():
         arr = []
         for j in range(0, 9):
             t = Tile(players[random.randint(0, 2)], gameboard,
-                     i, j, 'Grass', .25, .5, random.randint(0,6))
+                     i, j, 'Grass', .25, .5, random.randint(0, 6))
             db.session.add(t)
             arr.append(t)
         board.append(arr)
@@ -236,7 +241,8 @@ def turn_test():
 # Note: Tiles have a TerritoryType object as well
 # Note: Can use curl to access this endpoint if no frontend
 
-@app.route("/game/<game_id>/next_turn", methods=["GET","POST"])
+
+@app.route("/game/<game_id>/next_turn", methods=["GET", "POST"])
 def turn(game_id):
     print("*")
     g = Game.query.filter_by(game_id=game_id).first()
@@ -244,7 +250,7 @@ def turn(game_id):
     order = json.loads(turn.order)
     if request.method == "POST":
         # if turn.round == 0:
-        next_idx = (g.turn.order_idx+1)%len(order)
+        next_idx = (g.turn.order_idx + 1) % len(order)
         turn.order_idx = next_idx
         if next_idx == 0:
             turn.round += 1
@@ -253,6 +259,7 @@ def turn(game_id):
         return json.dumps(TurnSchema().dump(turn).data), 201
     elif request.method == "GET":
         return json.dumps(TurnSchema().dump(turn).data), 200
+
 
 @app.route("/<game_id>/gameboard", methods=["GET"])
 def gameboard(game_id):
@@ -265,6 +272,7 @@ def gameboard(game_id):
         for t in tiles:
             tile_matrix[t.row][t.col] = t.as_dict()
         return json.dumps(tile_matrix), 200
+
 
 @app.route("/testing/", methods=["GET", "POST"])
 def testing():
@@ -289,38 +297,95 @@ def list_routes():
 
         for line in sorted(output):
             print(line)
+
+
 @app.route("/game/<game_id>/trade", methods=["GET", "POST"])
 def trade(game_id):
     if request.method == "POST":
-        trade = request.get_json()
-        print("$")
-        print(trade)
-        print("$")
-        name1 = trade[0]['player_name']
-        money1 = trade[0]['money']
-        tile_id1 = trade[0]['tile_id']
-
-        name2 = trade[1]['player_name']
-        money2 = trade[1]['money']
-        tile_id2 = trade[1]['tile_id']
-
-        p1 = Player.query.filter_by(name=name1).first()
-        p2 = Player.query.filter_by(name=name2).first()
-
-        p1.money -= int(money1)
-        p2.money -= int(money2)
-        p1.money += int(money2)
-        p2.money += int(money1)
-
-        if tile_id1 != -1:
-            tile_to_change = Tile.query.filter_by(tile_id=tile_id1)
-            tile_to_change.player_id = p2.player_id
-        if tile_id2 != -1:
-            tile_to_change = Tile.query.filter_by(tile_id=tile_id2)
-            tile_to_change.player_id = p1.player_id
-
-        db.session.commit()
-
+        trades.append(request.get_json())
+        print(trades)
         return "", 201
 
-    return "",200
+    return "", 200
+
+@app.route("/game/<game_id>/check_for_trades/<player_name>")
+def check_for_trades(game_id,player_name):
+    print("checking for trades")
+    print(len(trades))
+    for i in range(0, len(trades)):
+        print(trades[i][1]["player_name"])
+        if trades[i][1]["player_name"] == player_name:
+            print("here")
+            return json.dumps(trades[i]), 200
+    print("end checking for trades")
+    return "", 200
+
+@app.route("/game/<game_id>/accept_trade/<accepting_player_name>", methods=["POST"])
+def accept_trade(game_id, accepting_player_name):
+    print("$")
+    print(accepting_player_name)
+    print("accept trade post")
+    print(range(0, len(trades)))
+    print("$")
+    for i in range(0, len(trades)):
+        print(trades[i][1]["player_name"])
+        if trades[i][1]["player_name"] == accepting_player_name:
+            print("here")
+            process_trade(i)
+            return "", 200
+    return "", 200
+
+
+
+
+
+
+def process_trade(idx):
+
+    trade = trades[idx]
+    trades.remove(trade)
+    print("!")
+    print(trade)
+
+    name1 = trade[0]['player_name']
+    money1 = trade[0]['money']
+    tile_id1 = trade[0]['tile_id']
+    print(name1)
+    print(money1)
+    print(tile_id1)
+    name2 = trade[1]['player_name']
+    money2 = trade[1]['money']
+    tile_id2 = trade[1]['tile_id']
+
+    p1 = Player.query.filter_by(name=name1).first()
+    p2 = Player.query.filter_by(name=name2).first()
+    print("77")
+    print(p1.money)
+    print(p2.money)
+    print("77")
+    p1.money -= int(money1)
+    p2.money -= int(money2)
+    p1.money += int(money2)
+    p2.money += int(money1)
+    print("88")
+    print(p1.money)
+    print(p2.money)
+    print("88")
+    print("!")
+    print('*')
+    if tile_id1 != -1:
+        print(tile_id1)
+        tile_to_change = Tile.query.filter_by(tile_id=tile_id1).first()
+        print(tile_to_change)
+        print(tile_to_change.tile_id)
+        print(tile_to_change.player_id)
+        tile_to_change.player_id = p2.player_id
+        print(tile_to_change.player_id)
+    if tile_id2 != -1:
+        tile_to_change = Tile.query.filter_by(tile_id=tile_id2).first()
+        print(tile_to_change.tile_id)
+        print(tile_to_change.player_id)
+        tile_to_change.player_id = p1.player_id
+        print(tile_to_change.player_id)
+    db.session.commit()
+    print('*')
