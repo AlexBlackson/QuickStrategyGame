@@ -238,52 +238,6 @@ function getGameBoard()
             if (xhr.status === 200 ) {
                 load_gb = JSON.parse(xhr.responseText);
 
-<<<<<<< HEAD
-            var cb;
-            var cb2;
-            for (cb = 0; cb < 9; cb++) {
-                for (cb2 = 0; cb2 < 9; cb2++) {
-                    myGameBoard[cb2][cb] = load_gb.tiles[cb2 + cb * 9];
-                }
-            }
-            var i = 0;
-            var left = 2;
-            var right = 7;
-            var left_increase = true;
-
-            var temp_money_totals = [0, 0, 0, 0, 0, 0];
-            var temp_luck_totals = [0, 0, 0, 0, 0, 0];
-
-            for (i = 0; i < 5; i++) {
-                for (j = left; j < right; j++) {
-                    var pid = parseInt(myGameBoard[i][j].player_id);
-                    temp_money_totals[pid - 1] += parseFloat(myGameBoard[i][j].income);
-                    temp_luck_totals[pid - 1] += parseFloat(myGameBoard[i][j].luck);
-                    localStorage.setItem('money_totals', money_totals);
-                    localStorage.setItem('luck_totals', luck_totals);
-
-                    if (!(document.getElementById(i + "" + j).getAttribute('class') == 'hexagon8')) {
-                        if (myGameBoard[i][j].player_id == "1") {
-                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon1');
-                            document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-
-                        } else if (myGameBoard[i][j].player_id == "2") {
-                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon2');
-                            document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-                        } else if (myGameBoard[i][j].player_id == "3") {
-                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon3');
-                            document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-                        } else if (myGameBoard[i][j].player_id == "4") {
-                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon4');
-                            document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-                        } else if (myGameBoard[i][j].player_id == "5") {
-                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon5');
-                            document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-                        } else if (myGameBoard[i][j].player_id == "6") {
-                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon6');
-                            document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-                        }
-=======
                 var cb;
                 var cb2;
                 for(cb = 0; cb < 9; cb++)
@@ -291,7 +245,6 @@ function getGameBoard()
                     for(cb2 = 0; cb2 <9; cb2++)
                     {
                         myGameBoard[cb2][cb] = load_gb.tiles[cb2+cb*9];
->>>>>>> 9f87602298800fb948c997f13234823d88712867
                     }
                 }
                 var i=0;
@@ -299,38 +252,6 @@ function getGameBoard()
                 var right = 7;
                 var left_increase = true;
 
-<<<<<<< HEAD
-            left = 0;
-            right = 8
-            var left_decrease = true;
-
-            for (i = 5; i < 9; i++) {
-                for (j = left; j < right; j++) {
-                    var pid = parseInt(myGameBoard[i][j].player_id);
-                    temp_money_totals[pid - 1] += parseFloat(myGameBoard[i][j].income);
-                    temp_luck_totals[pid - 1] += parseFloat(myGameBoard[i][j].luck);
-
-                    if (!(document.getElementById(i + "" + j).getAttribute('class') == 'hexagon8')) {
-                        if (myGameBoard[i][j].player_id == "1") {
-                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon1');
-                            document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-                        } else if (myGameBoard[i][j].player_id == "2") {
-                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon2');
-                            document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-                        } else if (myGameBoard[i][j].player_id == "3") {
-                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon3');
-                            document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-                        } else if (myGameBoard[i][j].player_id == "4") {
-                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon4');
-                            document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-                        } else if (myGameBoard[i][j].player_id == "5") {
-                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon5');
-                            document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-                        } else if (myGameBoard[i][j].player_id == "6") {
-                            document.getElementById(i + "" + j).setAttribute('class', 'hexagon6');
-                            document.getElementById(i + "" + j).getElementsByTagName('p')[0].innerHTML = myGameBoard[i][j].unit_count;
-                        }
-=======
                 var temp_money_totals = [0,0,0,0,0,0];
                 var temp_luck_totals = [0,0,0,0,0,0];
 
@@ -451,7 +372,6 @@ function getGameBoard()
                     else
                     {
                         right--;
->>>>>>> 9f87602298800fb948c997f13234823d88712867
                     }
                     left_decrease= !left_decrease;
                 }
@@ -460,14 +380,6 @@ function getGameBoard()
                 localStorage.setItem('money_totals', money_totals);
                 localStorage.setItem('luck_totals', luck_totals);
 
-<<<<<<< HEAD
-            luck_totals = temp_luck_totals;
-            money_totals = temp_money_totals;
-            localStorage.setItem('money_totals', money_totals);
-            localStorage.setItem('luck_totals', luck_totals);
-        } else {
-            console.log('Request failed. Returned status of ' + xhr.responseText);
-=======
             if(player1_count == 61)
             {
                 winner = 1;
@@ -519,7 +431,6 @@ function getGameBoard()
             }
             win_xhr.send(win_xhr);
 
->>>>>>> 9f87602298800fb948c997f13234823d88712867
         }
     }
 }
